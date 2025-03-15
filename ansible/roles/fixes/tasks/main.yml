@@ -1,8 +1,8 @@
 ---
-- name: "{{ task_name }}"
+- name: "{{ fixes_task_name }}"
   ansible.builtin.include_tasks: linux.yml
   when: ansible_os_family in ['Debian', 'RedHat', 'Suse']
 
-- name: "{{ task_name }}"
+- name: "{{ fixes_task_name }}"
   ansible.builtin.include_tasks: windows.yml
   when: ansible_os_family == "Windows"

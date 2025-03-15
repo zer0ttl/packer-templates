@@ -42,6 +42,14 @@ chmod 0600 vagrant-key
 - Sort this:
 
 ```bash
+packer inspect -var-file=windows.pkrvars.hcl .
+packer validate -var-file=windows.pkrvars.hcl .
+packer build -force -timestamp-ui -on-error=ask --only windows-server-standard-desktop.qemu.windows-server-standard-desktop -var-file=windows.pkrvars.hcl .
+```
+
+```bash
+PACKER_LOG=1 packer build -force -timestamp-ui -on-error=ask --only qemu.windows-server-standard-core -var-file=windows.pkrvars.hcl .
+
 PACKER_LOG=1 packer build -timestamp-ui -on-error=ask -var-file=parrotos.pkrvars.hcl .
 packer build -timestamp-ui -on-error=ask -var-file=parrotos.pkrvars.hcl .
 

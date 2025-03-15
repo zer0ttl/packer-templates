@@ -1,0 +1,112 @@
+---
+# Microsoft Windows specific tasks.
+
+# ansible-lint: disable=line-length
+# Tasks for installing Qemu guest agent.
+- name: Getting guest operating system information.
+  ansible.builtin.debug:
+    msg: "OS: {{ ansible_os_name }}"
+
+- name: Install Virtio Guest Tools
+  block:
+    - name: Check the location for virtio-win-guest-tools.exe in D drive
+      ansible.windows.win_stat:
+        path: D:\virtio-win-guest-tools.exe
+      register: d_drive
+
+    - name: Check the location for virtio-win-guest-tools.exe in F drive
+      ansible.windows.win_stat:
+        path: F:\virtio-win-guest-tools.exe
+      register: f_drive
+
+    - name: Install Virtio Guest Tools
+      ansible.windows.win_package:
+        path:  "{{ 'F:\\virtio-win-guest-tools.exe' if f_drive.stat.exists else 'D:\\virtio-win-guest-tools.exe' }}"
+        arguments:
+          - /install
+          - /passive
+          - /norestart
+
+    - name: Start service "QEMU-GA"
+      ansible.windows.win_service:
+        name: qemu-ga
+        start_mode: auto
+        state: started
+
+    - name: Sleep for 60 seconds before the next play is run
+      ansible.windows.win_wait_for:
+        timeout: 60
+
+- name: Import Red Hat Certificate
+  block:
+    - name: Check if redhat.cer is already present on the system
+      ansible.windows.win_stat:
+        path: "{{ ansible_env.TEMP }}\\redhat.cer"
+      register: redhat_cert
+
+    - name: Check the location for blnsvr.exe in D drive
+      ansible.windows.win_stat:
+        path: D:\Balloon\2k22\amd64\blnsvr.exe
+      register: d_drive
+      when: not redhat_cert.stat.exists
+
+    - name: Check the location for blnsvr.exe in F drive
+      ansible.windows.win_stat:
+        path: F:\Balloon\2k22\amd64\blnsvr.exe
+      register: f_drive
+      when: not redhat_cert.stat.exists
+
+    - name: Get the redhat certificate from blnsvr.exe
+      ansible.windows.win_powershell:
+        script: |
+          if (${{ d_drive.stat.exists|lower }}) {
+            $cert = (Get-AuthenticodeSignature "D:\Balloon\2k22\amd64\blnsvr.exe").SignerCertificate
+          } elseif (${{ f_drive.stat.exists|lower }}) {
+            $cert = (Get-AuthenticodeSignature "F:\Balloon\2k22\amd64\blnsvr.exe").SignerCertificate
+          }
+          [System.IO.File]::WriteAllBytes("${env:TEMP}\redhat.cer", $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert))
+      when: not redhat_cert.stat.exists
+
+    - name: Add redhat.cer to TrustedPublisher store
+      ansible.windows.win_certificate_store:
+        path: "{{ ansible_env.TEMP }}\\redhat.cer"
+        state: present
+        store_name: TrustedPublisher
+      when: redhat_cert.stat.exists
+
+- name: Install Spice Tools
+  block:
+    - name: Install Spice Tools
+      ansible.windows.win_package:
+        path: https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe
+        arguments:
+          - /S
+
+    - name: Start service "VdService"
+      ansible.windows.win_service:
+        name: VdService
+        start_mode: auto
+        state: started
+
+    - name: Start service "Spice Agent"
+      ansible.windows.win_service:
+        name: spice-agent
+        start_mode: auto
+        state: started
+
+    - name: Sleep for 60 seconds before the next play is run
+      ansible.windows.win_wait_for:
+        timeout: 60
+
+
+
+# - name: Disabling Local Administrator Password Expiration...
+#   ansible.windows.win_user:
+#     name: Administrator
+#     password_never_expires: true
+
+# - name: Disabling Password Expiration for "{{ build_username }}"
+#   ansible.windows.win_user:
+#     name: "{{ build_username }}"
+#     password_never_expires: true
+

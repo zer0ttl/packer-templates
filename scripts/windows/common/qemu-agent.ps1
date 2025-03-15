@@ -3,7 +3,7 @@
 
 Set-StrictMode -Version Latest
 $ProgressPreference = 'SilentlyContinue'
-$ErrorActionPreference = 'SilentlyContinue'
+$ErrorActionPreference = 'Stop'
 
 trap {
     Write-Host
@@ -18,18 +18,28 @@ trap {
 
 # Virtio Windows Guest Tools
 Write-Host "Installing Virtio Windows Guest Tools"
-$Arguments = @(
-    "/install"
-    "/passive"
+$argList = @(
+    "/install",
+    "/passive",
     "/norestart"
 )
-if (Test-Path -Path "f:\virtio-win-guest-tools.exe") {
-    Start-Process -FilePath "f:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments
+if (Test-Path -Path "F:\virtio-win-guest-tools.exe") {
+    Start-Process -FilePath "F:\virtio-win-guest-tools.exe" -ArgumentList $argList
 } else {
-    Start-Process -FilePath "d:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments
+    Start-Process -FilePath "D:\virtio-win-guest-tools.exe" -ArgumentList $argList
 }
 
-Write-Host "Starting service QEMU-GA"
-Start-Service -Name "QEMU-GA"
+# Because "-Wait" does not seem to work
+# Do {
+#     start-sleep -Milliseconds 500
+# } Until ($proc.HasExited)
 
-Write-Host "Installation of virtio complete"
+Write-Host "Starting service: QEMU-GA"
+# Start-Service -Name "QEMU-GA"
+Start-Service -Name "*qemu*"
+
+Write-Host "Installation of Virtio Windows Guest Tools complete"
+
+# Reset the autologon count.
+# Reference: https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-logoncount#logoncount-known-issue
+Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0

@@ -3,6 +3,7 @@
 *.vdi
 *.box
 *.ovf
+*.ps1
 packer_cache/
 /.vagrant
 provision.yml
@@ -23,3 +24,4 @@ builds/*/*/*/output*
 builds/*/*/*/output*/*
 builds/*/*/*/*.box
 builds/*/*/*/metadata*.json
+builds/*/*/*/*.log

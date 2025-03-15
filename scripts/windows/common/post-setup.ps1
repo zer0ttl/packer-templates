@@ -1,3 +1,6 @@
+# Post Setup script
+#
+
 Set-StrictMode -Version Latest
 $ProgressPreference = 'SilentlyContinue'
 $ErrorActionPreference = 'Stop'
@@ -16,3 +19,7 @@ trap {
 Write-Host "Copy SetupComplete file for execution on first boot" -ForegroundColor Green
 New-Item -Path 'C:\Windows\setup\scripts' -ItemType 'Directory' -Force
 Copy-Item -Path 'E:\SetupComplete.cmd' -Destination 'C:\Windows\setup\scripts\SetupComplete.cmd' -Force
+
+# Reset the autologon count.
+# Reference: https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-logoncount#logoncount-known-issue
+Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0

@@ -1,0 +1,34 @@
+---
+# Microsoft Windows specific tasks.
+
+# ansible-lint: disable=line-length
+# Tasks for installing and configuring Bginfo.
+- name: Download and configure Bginfo
+  block:
+    - name: Download Bginfo
+      ansible.windows.win_get_url:
+        url: https://live.sysinternals.com/Bginfo.exe
+        dest: C:\Windows\Bginfo.exe
+
+    - name: Locate bginfo.bgi
+      ansible.windows.win_stat:
+        path: "{{ item }}"
+      loop:
+        - D:\bginfo.bgi
+        - E:\bginfo.bgi
+        - F:\bginfo.bgi
+      register: locate
+
+    - name: Configure Bginfo
+      ansible.windows.win_copy:
+        src: "{{ item.stat.path }}"
+        dest: C:\Windows\bginfo.bgi
+        remote_src: true
+      when: item.stat.exists
+      loop: "{{ locate.results }}"
+
+    - name: Configure Bginfo to run on startup
+      ansible.windows.win_regedit:
+        path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+        name: BgInfo
+        data: C:\Windows\Bginfo.exe C:\Windows\bginfo.bgi /silent /Timer:0 /nolicprompt

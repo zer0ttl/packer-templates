@@ -1,0 +1,50 @@
+---
+# Microsoft Windows specific tasks.
+
+# ansible-lint: disable=line-length
+# Tasks for power management.
+- name: Set power management options
+  block:
+    - name: Set power profile to high performance
+      ansible.windows.win_command:
+        argv:
+          - C:\Windows\system32\powercfg.exe
+          - -setactive
+          - '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c'
+
+    - name: Turn off Hibernation
+      ansible.windows.win_command:
+        argv:
+          - C:\Windows\system32\powercfg.exe
+          - /hibernate
+          - "off"
+
+    - name: Turn off monitor timeout on AC power
+      ansible.windows.win_command:
+        argv:
+          - C:\Windows\system32\powercfg.exe
+          - -Change
+          - -monitor-timeout-ac
+          - 0
+
+    - name: Turn off monitor timeout on DC power
+      ansible.windows.win_command:
+        argv:
+          - C:\Windows\system32\powercfg.exe
+          - -Change
+          - -monitor-timeout-dc
+          - 0
+
+    - name: Set Hibernation file to zero
+      ansible.windows.win_regedit:
+        path: HKLM:\SYSTEM\CurrentControlSet\Control\Power
+        name: HiberFileSizePercent
+        data: 0
+        type: dword
+
+    - name: Disable Hibernation mode
+      ansible.windows.win_regedit:
+        path: HKLM:\SYSTEM\CurrentControlSet\Control\Power
+        name: HibernateEnabled
+        data: 0
+        type: dword
