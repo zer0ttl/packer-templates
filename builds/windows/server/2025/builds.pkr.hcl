@@ -259,14 +259,8 @@ build {
   name = "windows-server-standard-core"
 
   sources = [
-      "source.qemu.windows-server-standard-core"
+      "qemu.windows-server-standard-core"
   ]
-
-  # provisioner "powershell" {
-  #   elevated_user        = var.build_username
-  #   elevated_password    = var.build_password
-  #   scripts              = local.vm_provision_files_core
-  # }
 
   provisioner "ansible" {
       user                    = var.build_username
@@ -302,7 +296,7 @@ build {
   name = "windows-server-standard-desktop"
 
   sources = [
-      "source.qemu.windows-server-standard-desktop"
+      "qemu.windows-server-standard-desktop"
   ]
 
   provisioner "ansible" {
@@ -338,14 +332,8 @@ build {
   name = "windows-server-datacenter-core"
 
   sources = [
-      "source.qemu.windows-server-datacenter-core"
+      "qemu.windows-server-datacenter-core"
   ]
-
-  # provisioner "powershell" {
-  #   elevated_user        = var.build_username
-  #   elevated_password    = var.build_password
-  #   scripts              = local.vm_provision_files_core
-  # }
 
   provisioner "ansible" {
       user                    = var.build_username
@@ -381,14 +369,8 @@ build {
   name = "windows-server-datacenter-desktop"
 
   sources = [
-      "source.qemu.windows-server-datacenter-desktop"
+      "qemu.windows-server-datacenter-desktop"
   ]
-
-  # provisioner "powershell" {
-  #   elevated_user        = var.build_username
-  #   elevated_password    = var.build_password
-  #   scripts              = local.vm_provision_files_desktop
-  # }
 
   provisioner "ansible" {
       user                    = var.build_username

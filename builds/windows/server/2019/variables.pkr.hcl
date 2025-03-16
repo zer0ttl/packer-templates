@@ -1,13 +1,7 @@
-# Copyright 2023-2024 Broadcom. All rights reserved.
-# SPDX-License-Identifier: BSD-2
-
 /*
-    DESCRIPTION:
-    Microsoft Windows Server 2022 input variables.
+  Input variables for different versions of Microsoft Windows Server 2019.
 */
 
-//  BLOCK: variable
-//  Defines the input variables.
 
 variable "vm_accelerator" {
   type        = string
@@ -62,17 +56,19 @@ variable "vm_headless" {
 variable "iso_checksum" {
   type        = string
   description = "The checksum for the ISO file or virtual hard drive file."
-  //   Examples:
-  //     md5:090992ba9fd140077b0661cb75f7ce13
-  //     090992ba9fd140077b0661cb75f7ce13
-  //     sha1:ebfb681885ddf1234c18094a45bbeafd91467911
-  //     ebfb681885ddf1234c18094a45bbeafd91467911
-  //     sha256:ed363350696a726b7932db864dda019bd2017365c9e299627830f06954643f93
-  //     ed363350696a726b7932db864dda019bd2017365c9e299627830f06954643f93
-  //     file:http://releases.ubuntu.com/20.04/SHA256SUMS
-  //     file:file://./local/path/file.sum
-  //     file:./local/path/file.sum
-  //     none Although the checksum will not be verified when it is set to "none", this is not recommended since these files can be very large and corruption does happen from time to time.
+/*
+  Examples:
+  md5:090992ba9fd140077b0661cb75f7ce13
+  090992ba9fd140077b0661cb75f7ce13
+  sha1:ebfb681885ddf1234c18094a45bbeafd91467911
+  ebfb681885ddf1234c18094a45bbeafd91467911
+  sha256:ed363350696a726b7932db864dda019bd2017365c9e299627830f06954643f93
+  ed363350696a726b7932db864dda019bd2017365c9e299627830f06954643f93
+  file:http://releases.ubuntu.com/20.04/SHA256SUMS
+  file:file://./local/path/file.sum
+  file:./local/path/file.sum
+  none Although the checksum will not be verified when it is set to "none", this is not recommended since these files can be very large and corruption does happen from time to time.
+*/
 }
 
 variable "iso_urls" {
@@ -101,7 +97,6 @@ variable "vm_output_directory" {
 variable "vm_shutdown_command" {
   type        = string
   description = "Command(s) for guest operating system shutdown."
-  // a:\\sysprep.bat
 }
 
 variable "common_shutdown_timeout" {
@@ -124,13 +119,33 @@ variable "communicator_key_file" {
   description = "The path to a PEM encoded private key file to use to authenticate with SSH."
 }
 
+variable "communicator_clear_authorized_keys" {
+  type        = bool
+  description = "Packer will attempt to remove its temporary key from ~/.ssh/authorized_keys and /root/.ssh/authorized_keys"
+}
+
+variable "communicator_read_write_timeout" {
+  type        = string
+  description = "The amount of time to wait for a remote command to end. This is useful when packer hangs on a connection after a reboot."
+}
+
+variable "ansible_use_proxy" {
+  type        = bool
+  description = "Enable or disable setting up a localhost proxy adapter"
+}
+
+variable "ansible_galaxy_force_with_deps" {
+  type        = bool
+  description = "Force overwriting an existing role and its dependencies. Adds --force-with-deps option to ansible-galaxy command."
+}
+
 variable "vnc_bind_address" {
   type        = string
   description = "The IP address that should be binded to for VNC."
   default     = "0.0.0.0"
 }
 
-// autounattend.pkrtpl.hcl variables
+// variables for template file: autounattend.pkrtpl.hcl 
 
 variable "build_username" {
   type        = string

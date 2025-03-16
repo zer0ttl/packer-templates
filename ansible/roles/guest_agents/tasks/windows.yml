@@ -84,4 +84,3 @@
         - vdservice
       async: 60
       poll: 10
-
