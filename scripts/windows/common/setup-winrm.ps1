@@ -18,14 +18,16 @@ trap {
     Exit 1
 }
 
-# Set network connections provile to Private mode.
+# Set network connections profile to Private mode.
 Write-Output 'Setting the network connection profiles to Private...'
-$connectionProfile = Get-NetConnectionProfile
-While ($connectionProfile.Name -eq 'Identifying...') {
-    Start-Sleep -Seconds 10
-    $connectionProfile = Get-NetConnectionProfile
+$connectionProfiles = Get-NetConnectionProfile
+ForEach ($cf in $connectionProfiles)
+{
+   if ($cf.InterfaceAlias -ne 'Private') {
+        Start-Sleep -Seconds 10
+        Set-NetConnectionProfile -InterfaceAlias $cf.InterfaceAlias -NetworkCategory 'Private'
+   }
 }
-Set-NetConnectionProfile -Name $connectionProfile.Name -NetworkCategory Private
 
 # Set the Windows Remote Management configuration.
 Write-Output 'Setting the Windows Remote Management configuration...'
