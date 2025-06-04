@@ -1,5 +1,139 @@
 # TODO
 
+---
+
+## Wed Jun  4 07:03:13 AM MDT 2025
+
+2025-06-04T08:19:33-06:00: Build 'windows-desktop-enterprise.qemu.windows-desktop-enterprise' finished after 32 minutes 14 seconds.
+
+```bash
+chmod 0600 vagrant-key
+
+# Inspect
+packer inspect -var-file=variables.auto.pkrvars.hcl .
+
+# Validate
+packer validate -var-file=variables.auto.pkrvars.hcl .
+
+# Build
+PACKER_LOG=1 packer build -force -timestamp-ui -on-error=ask --only windows-desktop-enterprise.qemu.windows-desktop-enterprise -var-file=variables.auto.pkrvars.hcl .
+
+# Remove old vagrant box
+vagrant box remove zer0ttl/windows-10-enterprise
+
+# Generate box metadata json
+./box-metadata.sh packer_windows-desktop-10-22H2-enterprise_libvirt_amd64.box 
+
+# Add vagrant box
+vagrant box add "metadata-windows-10-enterprise.json"
+```
+
+The vmware repo has the following in their ansible code:
+```yaml
+ansible_os_installation_type != "Server Core"
+```
+
+Values for `ansible_os_installation_type` are:
+- `Client` : Windows 10 Desktop
+
+Ansible variables (`ansible_facts`) that can be used. These are from Microsoft Windows 10 Enterprise Desktop build.
+- `ansible_os_family`: `Windows`
+- `ansible_system`: `Win32NT`
+- `ansible_windows_domain_role`: `Stand-alone workstation`
+- `ansible_os_name`: `Microsoft Windows 10 Enterprise Evaluation`
+- `ansible_distribution`: `Microsoft Windows 10 Enterprise Evaluation`
+- `ansible_distribution_version`: `10.0.19045.0`
+- `ansible_os_product_type`: `workstation`
+- `ansible_windows_domain_member`: false
+- `ansible_os_installation_type`: `Client`
+- `ansible_kernel`: `10.0.19045.0`
+- `ansible_windows_domain`: `WORKGROUP`
+
+## Changes Made
+
+- File: `variables.pkr.hcl`
+
+```text
+variable "communicator_clear_authorized_keys" {
+  type        = bool
+  description = "Packer will attempt to remove its temporary key from ~/.ssh/authorized_keys and /root/.ssh/authorized_keys"
+}
+
+variable "communicator_read_write_timeout" {
+  type        = string
+  description = "The amount of time to wait for a remote command to end. This is useful when packer hangs on a connection after a reboot."
+}
+
+variable "ansible_use_proxy" {
+  type        = bool
+  description = "Enable or disable setting up a localhost proxy adapter"
+}
+
+variable "ansible_galaxy_force_with_deps" {
+  type        = bool
+  description = "Force overwriting an existing role and its dependencies. Adds --force-with-deps option to ansible-galaxy command."
+}
+```
+
+- File: `builds.pkr.hcl`
+
+```hcl
+locals {
+ansible_path = "${abspath(path.root)}/../../../../ansible"
+}
+
+source "qemu" "windows-desktop-enterprise" {
+  ssh_clear_authorized_keys = var.communicator_clear_authorized_keys
+  ssh_read_write_timeout    = var.communicator_read_write_timeout
+
+  # Comment the next two lines after testing
+  vnc_port_max              = 5959
+  vnc_port_min              = 5959
+}
+
+build {
+  provisioner "ansible" {
+      user                    = var.build_username
+      use_proxy               = var.ansible_use_proxy
+      galaxy_file             = "${local.ansible_path}/windows-requirements.yml"
+      galaxy_force_with_deps  = var.ansible_galaxy_force_with_deps
+      playbook_file           = "${local.ansible_path}/windows-playbook.yml"
+      roles_path              = "${local.ansible_path}/roles"
+      ansible_env_vars        = [
+                                  "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
+                                ]
+      ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
+      extra_arguments         = [
+                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  "--extra-vars", "ansible_shell_type='powershell'",
+                                  "--extra-vars", "ansible_shell_executable='none'",
+                                  "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
+                                  "--extra-vars", "ansible_user='${var.build_username}'",
+                                  "--extra-vars", "build_username='${var.build_username}'",
+                                  "-vvvv"
+                                ]
+  }
+}
+```
+
+- File: `variables.auto.pkvars.hcl`
+
+```hcl
+vm_communicator                     = "ssh" // change this to winrm if you want to switch communicator
+communicator_clear_authorized_keys  = true
+communicator_read_write_timeout     = "60s"
+
+// Provisioner: ansible settings
+ansible_use_proxy                   = false
+ansible_galaxy_force_with_deps      = true
+```
+
+
+
+
+
+---
+
 # RESUME HERE
 
 - #todo Add windows 10 boxes

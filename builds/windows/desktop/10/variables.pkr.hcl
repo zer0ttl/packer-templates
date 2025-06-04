@@ -124,6 +124,26 @@ variable "communicator_key_file" {
   description = "The path to a PEM encoded private key file to use to authenticate with SSH."
 }
 
+variable "communicator_clear_authorized_keys" {
+  type        = bool
+  description = "Packer will attempt to remove its temporary key from ~/.ssh/authorized_keys and /root/.ssh/authorized_keys"
+}
+
+variable "communicator_read_write_timeout" {
+  type        = string
+  description = "The amount of time to wait for a remote command to end. This is useful when packer hangs on a connection after a reboot."
+}
+
+variable "ansible_use_proxy" {
+  type        = bool
+  description = "Enable or disable setting up a localhost proxy adapter"
+}
+
+variable "ansible_galaxy_force_with_deps" {
+  type        = bool
+  description = "Force overwriting an existing role and its dependencies. Adds --force-with-deps option to ansible-galaxy command."
+}
+
 variable "vnc_bind_address" {
   type        = string
   description = "The IP address that should be binded to for VNC."

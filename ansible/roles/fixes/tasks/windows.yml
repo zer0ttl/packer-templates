@@ -104,6 +104,14 @@
         icmp_type_code:
           - '8:*'
 
+    # Enable Remote Desktop.
+    - name: Enable Remote Desktop
+      ansible.windows.win_powershell:
+        script: |
+          Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0 | Out-Null
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 0
+          Enable-NetFirewallRule -Group '@FirewallAPI.dll,-28752'
+
 # Tasks for post setup.
 - name: Miscellaneous fixes
   block:
