@@ -1,6 +1,3 @@
-# Copyright 2023-2024 Broadcom. All rights reserved.
-# SPDX-License-Identifier: BSD-2
-
 /*
     DESCRIPTION:
     Microsoft Windows Server 2022 input variables.
