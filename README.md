@@ -1,5 +1,16 @@
 # TODO
 
+## Sat Mar 14 08:40:13 AM MDT 2026
+
+There is an issue with linux ubuntu builds.
+You have to run builds one by one. All builds cannot run at the same time. It seems the builds create the same box file.
+Troubleshoot this and fix this. For now, you can run builds separately.
+
+```bash
+packer build -force -timestamp-ui -on-error=ask --only ubuntu-desktop.qemu.linux-ubuntu -var-file=variables.auto.pkrvars.hcl .
+packer build -force -timestamp-ui -on-error=ask --only ubuntu-server.qemu.linux-ubuntu -var-file=variables.auto.pkrvars.hcl .
+```
+
 ---
 
 ## Wed Jun  4 07:03:13 AM MDT 2025
