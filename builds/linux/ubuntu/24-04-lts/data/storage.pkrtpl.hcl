@@ -1,0 +1,3 @@
+  storage:
+    layout:
+      name: lvm

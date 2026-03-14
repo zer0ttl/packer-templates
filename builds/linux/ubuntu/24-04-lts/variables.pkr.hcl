@@ -1,0 +1,210 @@
+/*
+    DESCRIPTION:
+    Ubuntu Server 24.04 LTS build variables.
+    Packer Plugin for Qemu: 'qemu' builder.
+*/
+
+// Communicator Settings and Credentials
+
+variable "build_username" {
+  type        = string
+  description = "The username to login to the guest operating system."
+  sensitive   = false
+}
+
+variable "build_encrypted_password" {
+  type        = string
+  description = "The password to login to the guest operating system."
+  sensitive   = false
+}
+
+variable "build_password" {
+  type        = string
+  description = "The password to login to the guest operating system."
+  sensitive   = false
+}
+
+variable "build_vmname" {
+  type        = string
+  description = "The hostname of the guest operating system."
+  sensitive   = false
+}
+
+variable "build_authorized_keys" {
+  type        = list(string)
+  description = "SSH authorized keys to install for default user."
+  default     = []
+}
+
+variable "communicator_port" {
+  type        = string
+  description = "The port for the communicator protocol."
+}
+
+variable "vm_communicator" {
+  type        = string
+  description = "The type of connection will be established to the machine."
+  default     = "null"
+}
+
+// Virtual Machine Settings
+
+variable "vm_guest_os_language" {
+  type        = string
+  description = "The guest operating system lanugage."
+  default     = "en_US"
+}
+
+variable "vm_guest_os_keyboard" {
+  type        = string
+  description = "The guest operating system keyboard input."
+  default     = "us"
+}
+
+variable "vm_guest_os_timezone" {
+  type        = string
+  description = "The guest operating system timezone."
+  default     = "UTC"
+}
+
+variable "vm_guest_os_family" {
+  type        = string
+  description = "The guest operating system family. Used for naming."
+}
+
+variable "vm_guest_server_edition" {
+  type        = string
+  description = "The guest operating system edition for server. Used for naming."
+}
+
+variable "vm_guest_desktop_edition" {
+  type        = string
+  description = "The guest operating system edition for desktop. Used for naming."
+}
+
+variable "vm_guest_os_name" {
+  type        = string
+  description = "The guest operating system name. Used for naming."
+}
+
+variable "vm_guest_os_version" {
+  type        = string
+  description = "The guest operating system version. Used for naming."
+}
+
+// Additional Settings
+
+variable "additional_packages" {
+  type        = list(string)
+  description = "Additional packages to install."
+  default     = []
+}
+
+// Boot Settings
+
+variable "vm_accelerator" {
+  type        = string
+  description = "The virtualization platform."
+  default     = "kvm"
+}
+
+variable "vm_boot_wait" {
+  type        = string
+  description = "The time to wait before boot."
+}
+
+// Virtual Machine Settings
+
+variable "vm_cpu_count" {
+  type        = number
+  description = "The number of virtual CPUs."
+}
+
+variable "vm_disk_size" {
+  type        = number
+  description = "The size for the virtual disk in MB."
+}
+
+variable "vm_disk_interface" {
+  type        = string
+  description = "The interface to use for the disk."
+  default     = "virtio"
+}
+
+variable "vm_headless" {
+  type        = bool
+  description = "Start the VM with or without a console."
+  default     = false
+}
+
+variable "vm_mem_size" {
+  type        = number
+  description = "The size for the virtual memory in MB."
+}
+
+variable "vm_image_format" {
+  type        = string
+  description = "The output format of the virtual machine image."
+  default     = "qcow2"
+}
+
+variable "vm_net_device" {
+  type        = string
+  description = "The virtual network card type."
+  default     = "virtio-net"
+}
+
+variable "vm_shutdown_command" {
+  type        = string
+  description = "Command(s) for guest operating system shutdown."
+  // a:\\sysprep.bat
+}
+
+variable "vm_network_device" {
+  type        = string
+  description = "The network interface in VM."
+  default     = "eth0"
+}
+
+variable "iso_urls" {
+  type        = list(string)
+  description = "Multiple URLs for the ISO to download."
+  default     = []
+}
+
+variable "iso_checksum" {
+  type        = string
+  description = "The checksum for the ISO file or virtual hard drive file."
+  //   Examples:
+  //     md5:090992ba9fd140077b0661cb75f7ce13
+  //     090992ba9fd140077b0661cb75f7ce13
+  //     sha1:ebfb681885ddf1234c18094a45bbeafd91467911
+  //     ebfb681885ddf1234c18094a45bbeafd91467911
+  //     sha256:ed363350696a726b7932db864dda019bd2017365c9e299627830f06954643f93
+  //     ed363350696a726b7932db864dda019bd2017365c9e299627830f06954643f93
+  //     file:http://releases.ubuntu.com/20.04/SHA256SUMS
+  //     file:file://./local/path/file.sum
+  //     file:./local/path/file.sum
+  //     none Although the checksum will not be verified when it is set to "none", this is not recommended since these files can be very large and corruption does happen from time to time.
+}
+
+variable "common_shutdown_timeout" {
+  type        = string
+  description = "Time to wait for guest operating system shutdown."
+}
+
+variable "communicator_timeout" {
+  type        = string
+  description = "The timeout for the communicator protocol."
+}
+
+variable "vnc_bind_address" {
+  type        = string
+  description = "The IP address that should be binded to for VNC."
+  default     = "0.0.0.0"
+}
+
+variable "communicator_key_file" {
+  type        = string
+  description = "The path to a PEM encoded private key file to use to authenticate with SSH."
+}

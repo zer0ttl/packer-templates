@@ -16,6 +16,10 @@ packer inspect -var-file=variables.auto.pkrvars.hcl .
 packer validate -var-file=variables.auto.pkrvars.hcl .
 
 # Build
+packer build -force -timestamp-ui -on-error=ask -var-file=variables.auto.pkrvars.hcl .
+
+# Debug Build
+PACKER_LOG=1 packer build -force -timestamp-ui -on-error=ask -var-file=variables.auto.pkrvars.hcl .
 PACKER_LOG=1 packer build -force -timestamp-ui -on-error=ask --only windows-desktop-enterprise.qemu.windows-desktop-enterprise -var-file=variables.auto.pkrvars.hcl .
 
 # Remove old vagrant box
