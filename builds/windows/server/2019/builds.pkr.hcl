@@ -95,7 +95,7 @@ source "qemu" "windows-server-standard-core" {
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
   ssh_username              = var.build_username
-  ssh_password              = var.build_password
+  temporary_key_pair_type   = "ed25519"
   ssh_timeout               = var.communicator_timeout
   vnc_bind_address          = var.vnc_bind_address
 }
@@ -139,7 +139,7 @@ source "qemu" "windows-server-standard-desktop" {
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
   ssh_username              = var.build_username
-  ssh_password              = var.build_password
+  temporary_key_pair_type   = "ed25519"
   ssh_timeout               = var.communicator_timeout
   vnc_bind_address          = var.vnc_bind_address
   # Comment the next two lines after testing
@@ -186,7 +186,7 @@ source "qemu" "windows-server-datacenter-core" {
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
   ssh_username              = var.build_username
-  ssh_password              = var.build_password
+  temporary_key_pair_type   = "ed25519"
   ssh_timeout               = var.communicator_timeout
   vnc_bind_address          = var.vnc_bind_address
 }
@@ -230,7 +230,7 @@ source "qemu" "windows-server-datacenter-desktop" {
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
   ssh_username              = var.build_username
-  ssh_password              = var.build_password
+  temporary_key_pair_type   = "ed25519"
   ssh_timeout               = var.communicator_timeout
   vnc_bind_address          = var.vnc_bind_address
 }
@@ -258,7 +258,6 @@ build {
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
-                                  "--extra-vars", "ansible_password='${var.build_password}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
                                 ]
@@ -296,7 +295,6 @@ build {
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
-                                  "--extra-vars", "ansible_password='${var.build_password}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
                                 ]
@@ -333,7 +331,6 @@ build {
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
-                                  "--extra-vars", "ansible_password='${var.build_password}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
                                 ]
@@ -371,7 +368,6 @@ build {
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
-                                  "--extra-vars", "ansible_password='${var.build_password}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
                                 ]

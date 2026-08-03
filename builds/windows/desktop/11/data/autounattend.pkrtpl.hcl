@@ -184,18 +184,23 @@
                <RequiresUserInput>true</RequiresUserInput>
             </SynchronousCommand>
             <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\setup-openssh.ps1</CommandLine>
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$sshDir='C:\Users\${build_username}\.ssh'; New-Item -Path $sshDir -ItemType Directory -Force | Out-Null; Set-Content -Path (Join-Path $sshDir 'authorized_keys') -Value '{{ .SSHPublicKey }}' -Encoding ascii; icacls $sshDir /inheritance:r /grant:r '${build_username}:(OI)(CI)F' | Out-Null"</CommandLine>
+               <Description>Install the temporary Packer SSH public key</Description>
                <Order>3</Order>
+            </SynchronousCommand>
+            <SynchronousCommand wcm:action="add">
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\setup-openssh.ps1</CommandLine>
+               <Order>4</Order>
                <Description>Initial Configuration</Description>
             </SynchronousCommand>
             <SynchronousCommand wcm:action="add">
                <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\setup-winrm.ps1</CommandLine>
-               <Order>4</Order>
+               <Order>5</Order>
                <Description>Enable and configure WinRM</Description>
             </SynchronousCommand>
             <SynchronousCommand wcm:action="add">
                <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\setup-cloudbase-init.ps1</CommandLine>
-               <Order>5</Order>
+               <Order>6</Order>
                <Description>Install and configure Cloudbase-Init</Description>
             </SynchronousCommand>
          </FirstLogonCommands>

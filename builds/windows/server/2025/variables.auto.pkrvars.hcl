@@ -20,7 +20,7 @@ communicator_port                   = 22
 communicator_read_write_timeout     = "60s"
 
 // Provisioner: ansible settings
-ansible_use_proxy                   = false
+ansible_use_proxy                   = true
 ansible_galaxy_force_with_deps      = true
 
 // Removable Media Settings

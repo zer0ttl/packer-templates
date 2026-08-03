@@ -124,6 +124,7 @@ variable "communicator_read_write_timeout" {
 variable "ansible_use_proxy" {
   type        = bool
   description = "Enable or disable setting up a localhost proxy adapter"
+  default     = true
 }
 
 variable "ansible_galaxy_force_with_deps" {

@@ -18,6 +18,7 @@ packer build -force -timestamp-ui -on-error=ask --only ubuntu-server.qemu.linux-
 2025-06-04T08:19:33-06:00: Build 'windows-desktop-enterprise.qemu.windows-desktop-enterprise' finished after 32 minutes 14 seconds.
 
 ```bash
+# Used only to create the temporary Windows unattended build account.
 export PKR_VAR_build_password='use-a-unique-build-only-password'
 
 # Inspect

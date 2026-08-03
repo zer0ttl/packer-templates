@@ -103,7 +103,7 @@ source "qemu" "windows-desktop-ent" {
   shutdown_command     = var.vm_shutdown_command
   shutdown_timeout     = var.common_shutdown_timeout
   ssh_username         = var.build_username
-  ssh_password         = var.build_password
+  temporary_key_pair_type = "ed25519"
   ssh_timeout          = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
   vtpm                 = var.vm_vtpm
