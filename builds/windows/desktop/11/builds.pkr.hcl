@@ -27,6 +27,8 @@ locals {
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_core           = [
                                 "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/setup-winrm.ps1",
+                                "${local.scripts_path}/setup-cloudbase-init.ps1",
                                 "${local.scripts_path}/qemu-agent.ps1",
                                 "${local.scripts_path}/power.ps1",
                                 "${local.scripts_path}/common-fixes.ps1",
@@ -100,9 +102,9 @@ source "qemu" "windows-desktop-ent" {
   memory               = var.vm_mem_size
   shutdown_command     = var.vm_shutdown_command
   shutdown_timeout     = var.common_shutdown_timeout
-  ssh_username         = var.build_username
-  ssh_private_key_file = var.communicator_key_file
-  ssh_wait_timeout     = var.communicator_timeout
+  winrm_username       = var.build_username
+  winrm_password       = var.build_password
+  winrm_timeout        = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
   vtpm                 = var.vm_vtpm
 }
@@ -145,9 +147,6 @@ source "qemu" "windows-desktop-ent" {
 //   memory               = var.vm_mem_size
 //   shutdown_command     = var.vm_shutdown_command
 //   shutdown_timeout     = var.common_shutdown_timeout
-//   ssh_username         = var.build_username
-//   ssh_private_key_file = var.communicator_key_file
-//   ssh_wait_timeout     = var.communicator_timeout
 //   vnc_bind_address     = var.vnc_bind_address
 //   vtpm                 = var.vm_vtpm
 // }
@@ -166,7 +165,9 @@ build {
   }
 
   post-processor "vagrant" {
+      keep_input_artifact = true
       compression_level  = 9
+      vagrantfile_template = "${abspath(path.root)}/../../../../vagrant/windows/Vagrantfile"
       output             = "packer_${local.vm_name_ent}_{{.Provider}}_{{.Architecture}}.box"
   }
 }

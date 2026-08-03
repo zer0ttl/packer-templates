@@ -193,6 +193,11 @@
                <Order>4</Order>
                <Description>Enable and configure WinRM</Description>
             </SynchronousCommand>
+            <SynchronousCommand wcm:action="add">
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\setup-cloudbase-init.ps1</CommandLine>
+               <Order>5</Order>
+               <Description>Install and configure Cloudbase-Init</Description>
+            </SynchronousCommand>
          </FirstLogonCommands>
       </component>
    </settings>

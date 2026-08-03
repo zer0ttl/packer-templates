@@ -13,11 +13,10 @@ vm_mem_size = 8192
 vm_shutdown_command = "E:\\sysprep.bat"
 
 // Communicator settings
-vm_communicator = "ssh"
+vm_communicator = "winrm"
 common_shutdown_timeout = "15m"
 communicator_timeout = "5h"
-communicator_port = 22
-communicator_key_file = "vagrant-key"
+communicator_port = 5985
 
 // Removable Media Settings
 iso_checksum = "sha256:C8DBC96B61D04C8B01FAF6CE0794FDF33965C7B350EAA3EB1E6697019902945C"
@@ -25,9 +24,9 @@ iso_urls = ["https://software-static.download.prss.microsoft.com/dbazure/888969d
 iso_virtio_windows = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso"
 
 // Installation Operating System Metadata
-build_username = "vagrant"
-build_password = "vagrant"
-build_vmname = "vagrantvm"
+// Set PKR_VAR_build_password before building; it is intentionally not stored here.
+build_username = "packer"
+build_vmname = "windowsvm"
 build_orgname  = "Detekt Labs"
 vm_inst_os_language = "en-US"
 vm_inst_os_keyboard = "en-US"

@@ -31,6 +31,7 @@ locals {
   vm_cd_files_core           = [
                                 "${local.scripts_path}/setup-openssh.ps1",
                                 "${local.scripts_path}/setup-winrm.ps1",
+                                "${local.scripts_path}/setup-cloudbase-init.ps1",
                                 "${local.scripts_path}/qemu-agent.ps1",
                                 "${local.scripts_path}/power.ps1",
                                 "${local.scripts_path}/common-fixes.ps1",
@@ -93,11 +94,6 @@ source "qemu" "windows-server-standard-core" {
   memory                    = var.vm_mem_size
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
-  ssh_username              = var.build_username
-  ssh_private_key_file      = var.communicator_key_file
-  ssh_wait_timeout          = var.communicator_timeout
-  ssh_clear_authorized_keys = var.communicator_clear_authorized_keys
-  ssh_read_write_timeout    = var.communicator_read_write_timeout
   winrm_username            = var.build_username
   winrm_password            = var.build_password
   winrm_timeout             = var.communicator_timeout
@@ -142,11 +138,6 @@ source "qemu" "windows-server-standard-desktop" {
   memory                    = var.vm_mem_size
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
-  ssh_username              = var.build_username
-  ssh_private_key_file      = var.communicator_key_file
-  ssh_wait_timeout          = var.communicator_timeout
-  ssh_clear_authorized_keys = var.communicator_clear_authorized_keys
-  ssh_read_write_timeout    = var.communicator_read_write_timeout
   winrm_username            = var.build_username
   winrm_password            = var.build_password
   winrm_timeout             = var.communicator_timeout
@@ -194,11 +185,6 @@ source "qemu" "windows-server-datacenter-core" {
   memory                    = var.vm_mem_size
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
-  ssh_username              = var.build_username
-  ssh_private_key_file      = var.communicator_key_file
-  ssh_wait_timeout          = var.communicator_timeout
-  ssh_clear_authorized_keys = var.communicator_clear_authorized_keys
-  ssh_read_write_timeout    = var.communicator_read_write_timeout
   winrm_username            = var.build_username
   winrm_password            = var.build_password
   winrm_timeout             = var.communicator_timeout
@@ -243,11 +229,6 @@ source "qemu" "windows-server-datacenter-desktop" {
   memory                    = var.vm_mem_size
   shutdown_command          = var.vm_shutdown_command
   shutdown_timeout          = var.common_shutdown_timeout
-  ssh_username              = var.build_username
-  ssh_private_key_file      = var.communicator_key_file
-  ssh_timeout               = var.communicator_timeout
-  ssh_clear_authorized_keys = var.communicator_clear_authorized_keys
-  ssh_read_write_timeout    = var.communicator_read_write_timeout
   winrm_username            = var.build_username
   winrm_password            = var.build_password
   winrm_timeout             = var.communicator_timeout
@@ -272,12 +253,10 @@ build {
       ansible_env_vars        = [
                                   "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
                                 ]
-      ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
                                   "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
-                                  "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
@@ -285,7 +264,9 @@ build {
   }
 
   post-processor "vagrant" {
+      keep_input_artifact = true
       compression_level  = 9
+      vagrantfile_template = "${abspath(path.root)}/../../../../vagrant/windows/Vagrantfile"
       output             = "packer_${local.vm_name_standard_core}_{{.Provider}}_{{.Architecture}}.box"
   }
 }
@@ -309,12 +290,10 @@ build {
       ansible_env_vars        = [
                                   "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
                                 ]
-      ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
                                   "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
-                                  "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
@@ -322,7 +301,9 @@ build {
   }
 
   post-processor "vagrant" {
+      keep_input_artifact = true
       compression_level  = 9
+      vagrantfile_template = "${abspath(path.root)}/../../../../vagrant/windows/Vagrantfile"
       output             = "packer_${local.vm_name_standard_desktop}_{{.Provider}}_{{.Architecture}}.box"
   }
 }
@@ -345,12 +326,10 @@ build {
       ansible_env_vars        = [
                                   "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
                                 ]
-      ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
                                   "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
-                                  "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
@@ -358,7 +337,9 @@ build {
   }
 
   post-processor "vagrant" {
+      keep_input_artifact = true
       compression_level  = 9
+      vagrantfile_template = "${abspath(path.root)}/../../../../vagrant/windows/Vagrantfile"
       output             = "packer_${local.vm_name_datacenter_core}_{{.Provider}}_{{.Architecture}}.box"
   }
 }
@@ -382,12 +363,10 @@ build {
       ansible_env_vars        = [
                                   "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
                                 ]
-      ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
                                   "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
-                                  "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
                                   "--extra-vars", "ansible_user='${var.build_username}'",
                                   "--extra-vars", "build_username='${var.build_username}'",
                                   "-vvvv"
@@ -395,7 +374,9 @@ build {
   }
 
   post-processor "vagrant" {
+      keep_input_artifact = true
       compression_level  = 9
+      vagrantfile_template = "${abspath(path.root)}/../../../../vagrant/windows/Vagrantfile"
       output             = "packer_${local.vm_name_datacenter_desktop}_{{.Provider}}_{{.Architecture}}.box"
   }
 }

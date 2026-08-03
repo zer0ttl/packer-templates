@@ -116,16 +116,6 @@ variable "communicator_port" {
   description = "The port for the communicator protocol."
 }
 
-variable "communicator_key_file" {
-  type        = string
-  description = "The path to a PEM encoded private key file to use to authenticate with SSH."
-}
-
-variable "communicator_clear_authorized_keys" {
-  type        = bool
-  description = "Packer will attempt to remove its temporary key from ~/.ssh/authorized_keys and /root/.ssh/authorized_keys"
-}
-
 variable "communicator_read_write_timeout" {
   type        = string
   description = "The amount of time to wait for a remote command to end. This is useful when packer hangs on a connection after a reboot."
@@ -152,13 +142,13 @@ variable "vnc_bind_address" {
 variable "build_username" {
   type        = string
   description = "The username to login to the guest operating system."
-  sensitive   = false
+  sensitive   = true
 }
 
 variable "build_password" {
   type        = string
   description = "The password to login to the guest operating system."
-  sensitive   = false
+  sensitive   = true
 }
 
 variable "build_vmname" {

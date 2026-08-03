@@ -12,12 +12,10 @@ vm_mem_size                 = 8192
 vm_shutdown_command         = "E:\\sysprep.bat"
 
 // Communicator settings
-vm_communicator                     = "ssh"
+vm_communicator                     = "winrm"
 common_shutdown_timeout             = "15m"
 communicator_timeout                = "5h"
-communicator_port                   = 22
-communicator_key_file               = "vagrant-key"
-communicator_clear_authorized_keys  = true
+communicator_port                   = 5985
 communicator_read_write_timeout     = "60s"
 
 // Provisioner: ansible settings
@@ -30,9 +28,9 @@ iso_urls            = ["https://software-static.download.prss.microsoft.com/sg/d
 iso_virtio_windows  = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso"
 
 // Installed Operating System Metadata
-build_username                      = "vagrant"
-build_password                      = "vagrant"
-build_vmname                        = "vagrantvm"
+// Set PKR_VAR_build_password before building; it is intentionally not stored here.
+build_username                      = "packer"
+build_vmname                        = "windowsvm"
 build_orgname                       = "Detekt Labs"
 vm_inst_os_language                 = "en-US"
 vm_inst_os_keyboard                 = "en-US"

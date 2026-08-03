@@ -18,7 +18,7 @@ packer build -force -timestamp-ui -on-error=ask --only ubuntu-server.qemu.linux-
 2025-06-04T08:19:33-06:00: Build 'windows-desktop-enterprise.qemu.windows-desktop-enterprise' finished after 32 minutes 14 seconds.
 
 ```bash
-chmod 0600 vagrant-key
+export PKR_VAR_build_password='use-a-unique-build-only-password'
 
 # Inspect
 packer inspect -var-file=variables.auto.pkrvars.hcl .
@@ -33,13 +33,13 @@ packer build -force -timestamp-ui -on-error=ask -var-file=variables.auto.pkrvars
 PACKER_LOG=1 packer build -force -timestamp-ui -on-error=ask -var-file=variables.auto.pkrvars.hcl .
 PACKER_LOG=1 packer build -force -timestamp-ui -on-error=ask --only windows-desktop-enterprise.qemu.windows-desktop-enterprise -var-file=variables.auto.pkrvars.hcl .
 
-# Remove old vagrant box
+# Remove old Vagrant box
 vagrant box remove zer0ttl/windows-10-enterprise
 
 # Generate box metadata json
 ./box-metadata.sh packer_windows-desktop-10-22H2-enterprise_libvirt_amd64.box 
 
-# Add vagrant box
+# Add Vagrant box
 vagrant box add "metadata-windows-10-enterprise.json"
 ```
 
@@ -343,6 +343,15 @@ You can then use the newly added box to spin up a vm with VirtualBox using `vagr
 
 ## Vagrantfiles
 
+### Windows launch credentials
+
+Active Windows images no longer contain the shared vagrant/vagrant account or
+the Vagrant insecure key. Create a gitignored user-data Cloudbase-Init file
+and set WINDOWS_USER_DATA before vagrant up. Include an ssh_authorized_keys
+entry and set WINDOWS_SSH_PRIVATE_KEY_PATH for key-based SSH launch; otherwise
+the box uses HTTPS WinRM with the supplied password. See
+vagrant/windows/README.md.
+
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "parrotos-5.3"
@@ -359,5 +368,3 @@ end
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
-
-
