@@ -20,7 +20,7 @@ variable "vm_boot_wait" {
 variable "vm_communicator" {
   type        = string
   description = "The type of connection will be established to the machine."
-  default     = "winrm"
+  default     = "ssh"
 }
 
 variable "vm_cpu_count" {

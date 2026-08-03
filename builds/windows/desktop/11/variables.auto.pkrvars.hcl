@@ -13,10 +13,10 @@ vm_mem_size = 8192
 vm_shutdown_command = "E:\\sysprep.bat"
 
 // Communicator settings
-vm_communicator = "winrm"
+vm_communicator = "ssh"
 common_shutdown_timeout = "15m"
 communicator_timeout = "5h"
-communicator_port = 5985
+communicator_port = 22
 
 // Removable Media Settings
 iso_checksum = "sha256:C8DBC96B61D04C8B01FAF6CE0794FDF33965C7B350EAA3EB1E6697019902945C"

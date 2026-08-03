@@ -12,10 +12,10 @@ vm_mem_size                 = 8192
 vm_shutdown_command         = "E:\\sysprep.bat"
 
 // Communicator settings
-vm_communicator                     = "winrm"
+vm_communicator                     = "ssh"
 common_shutdown_timeout             = "15m"
 communicator_timeout                = "5h"
-communicator_port                   = 5985
+communicator_port                   = 22
 communicator_read_write_timeout     = "60s"
 
 // Provisioner: ansible settings
