@@ -184,7 +184,7 @@
                <RequiresUserInput>true</RequiresUserInput>
             </SynchronousCommand>
             <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$sshDir='C:\Users\${build_username}\.ssh'; New-Item -Path $sshDir -ItemType Directory -Force | Out-Null; Set-Content -Path (Join-Path $sshDir 'authorized_keys') -Value '{{ .SSHPublicKey }}' -Encoding ascii; icacls $sshDir /inheritance:r /grant:r '${build_username}:(OI)(CI)F' | Out-Null"</CommandLine>
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File E:\setup-packer-ssh.ps1 -Username ${build_username}</CommandLine>
                <Description>Install the temporary Packer SSH public key</Description>
                <Order>3</Order>
             </SynchronousCommand>

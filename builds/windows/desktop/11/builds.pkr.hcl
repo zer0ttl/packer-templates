@@ -26,7 +26,8 @@ locals {
   vm_name_pro                = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_version}-${var.vm_guest_os_edition_pro}"
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_core           = [
-                                "${local.scripts_path}/setup-openssh.ps1",
+                               "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/setup-packer-ssh.ps1",
                                 "${local.scripts_path}/setup-winrm.ps1",
                                 "${local.scripts_path}/setup-cloudbase-init.ps1",
                                 "${local.scripts_path}/qemu-agent.ps1",
@@ -84,7 +85,8 @@ source "qemu" "windows-desktop-ent" {
                                 vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                 vm_guest_os_timezone = var.vm_guest_os_timezone
                             }),
-                            "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
+                                "packer-ssh-authorized-key.txt" = "{{ .SSHPublicKey }}",
+                                "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
                                 build_username       = var.build_username
                                 build_password       = var.build_password
                                 build_vmname         = var.build_vmname

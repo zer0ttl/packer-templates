@@ -5,6 +5,7 @@
 *.ovf
 *.ps1
 !scripts/windows/common/setup-cloudbase-init.ps1
+!scripts/windows/common/setup-packer-ssh.ps1
 packer_cache/
 /.vagrant
 provision.yml

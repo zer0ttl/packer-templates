@@ -30,6 +30,7 @@ locals {
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_core           = [
                                 "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/setup-packer-ssh.ps1",
                                 "${local.scripts_path}/setup-winrm.ps1",
                                 "${local.scripts_path}/setup-cloudbase-init.ps1",
                                 "${local.scripts_path}/qemu-agent.ps1",
@@ -76,6 +77,7 @@ source "qemu" "windows-server-standard-core" {
                                     vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                     vm_guest_os_timezone = var.vm_guest_os_timezone
                                 }),
+                                "packer-ssh-authorized-key.txt" = "{{ .SSHPublicKey }}",
                                 "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
                                     build_username       = var.build_username
                                     build_password       = var.build_password
@@ -120,6 +122,7 @@ source "qemu" "windows-server-standard-desktop" {
                                     vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                     vm_guest_os_timezone = var.vm_guest_os_timezone
                                 }),
+                                "packer-ssh-authorized-key.txt" = "{{ .SSHPublicKey }}",
                                 "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
                                     build_username       = var.build_username
                                     build_password       = var.build_password
@@ -167,6 +170,7 @@ source "qemu" "windows-server-datacenter-core" {
                                     vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                     vm_guest_os_timezone = var.vm_guest_os_timezone
                                 }),
+                                "packer-ssh-authorized-key.txt" = "{{ .SSHPublicKey }}",
                                 "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
                                     build_username       = var.build_username
                                     build_password       = var.build_password
@@ -211,6 +215,7 @@ source "qemu" "windows-server-datacenter-desktop" {
                                     vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                     vm_guest_os_timezone = var.vm_guest_os_timezone
                                 }),
+                                "packer-ssh-authorized-key.txt" = "{{ .SSHPublicKey }}",
                                 "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
                                     build_username       = var.build_username
                                     build_password       = var.build_password
