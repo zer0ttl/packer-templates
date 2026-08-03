@@ -1,5 +1,6 @@
 :: NOTE: Both WinRM and SSH rules need to be enabled as Windows Desktop boxes use WinRM and Windows Server boxes use SSH for provisioning.
-:: Disable firewall rules to avoid vagrant connecting to box before inital boot (post sysprep) is completed
+:: Disable firewall rules while Sysprep is preparing the image. SetupComplete
+:: restores the required access rules before Cloudbase-Init runs.
 
 :: Winrm
 netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new action=block

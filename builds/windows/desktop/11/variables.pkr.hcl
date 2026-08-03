@@ -20,7 +20,7 @@ variable "vm_boot_wait" {
 variable "vm_communicator" {
   type        = string
   description = "The type of connection will be established to the machine."
-  default     = "winrm"
+  default     = "ssh"
 }
 
 variable "vm_cpu_count" {
@@ -122,11 +122,6 @@ variable "communicator_port" {
   description = "The port for the communicator protocol."
 }
 
-variable "communicator_key_file" {
-  type        = string
-  description = "The path to a PEM encoded private key file to use to authenticate with SSH."
-}
-
 variable "vnc_bind_address" {
   type        = string
   description = "The IP address that should be binded to for VNC."
@@ -138,13 +133,13 @@ variable "vnc_bind_address" {
 variable "build_username" {
   type        = string
   description = "The username to login to the guest operating system."
-  sensitive   = false
+  sensitive   = true
 }
 
 variable "build_password" {
   type        = string
   description = "The password to login to the guest operating system."
-  sensitive   = false
+  sensitive   = true
 }
 
 variable "build_vmname" {

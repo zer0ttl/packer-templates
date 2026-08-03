@@ -3,7 +3,6 @@
 *.vdi
 *.box
 *.ovf
-*.ps1
 packer_cache/
 /.vagrant
 provision.yml
@@ -11,6 +10,8 @@ provision.yml
 /*/.vagrant/*
 */output/*
 */output*/*
+user-data
+**/user-data
 *.checksum
 */ubuntu-server-22.04-qemu/*
 */*-qemu/*

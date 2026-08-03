@@ -1,0 +1,53 @@
+# Vagrant launch contract for the Windows images.
+# WINDOWS_USER_DATA points to a gitignored Cloudbase-Init #cloud-config file.
+# WINDOWS_SSH_PRIVATE_KEY_PATH is required for key-based SSH launch.
+
+require 'yaml'
+
+user_data_path = ENV['WINDOWS_USER_DATA']
+abort 'WINDOWS_USER_DATA must point to a Cloudbase-Init user-data file' if user_data_path.nil? || user_data_path.empty?
+abort "Windows user-data file does not exist: #{user_data_path}" unless File.file?(user_data_path)
+
+begin
+  user_data = YAML.safe_load(File.read(user_data_path))
+rescue Psych::Exception => e
+  abort "Invalid Windows user-data YAML: #{e.message}"
+end
+
+users = user_data.is_a?(Hash) ? user_data['users'] : nil
+abort 'Windows user-data must define exactly one user' unless users.is_a?(Array) && users.length == 1
+
+launch_user = users.first
+abort 'Windows user-data user must be a mapping' unless launch_user.is_a?(Hash)
+username = launch_user['name'].to_s
+password = launch_user['passwd'].to_s
+keys = launch_user['ssh_authorized_keys']
+keys = [] unless keys.is_a?(Array)
+abort 'Windows user-data user must provide passwd or ssh_authorized_keys' if password.empty? && keys.empty?
+abort 'Windows launch user must belong to Administrators' unless Array(launch_user['groups']).map(&:to_s).include?('Administrators')
+
+private_key = ENV['WINDOWS_SSH_PRIVATE_KEY_PATH']
+use_ssh = !private_key.to_s.empty? && !keys.empty?
+abort 'WINDOWS_SSH_PRIVATE_KEY_PATH does not exist' if use_ssh && !File.file?(private_key)
+
+Vagrant.configure('2') do |config|
+  config.vm.guest = :windows
+  config.vm.cloud_init :user_data, content_type: 'text/cloud-config', path: File.expand_path(user_data_path)
+  config.vm.cloud_init_first_boot_only = true
+
+  if use_ssh
+    config.vm.communicator = :ssh
+    config.ssh.username = username
+    config.ssh.private_key_path = File.expand_path(private_key)
+    config.ssh.insert_key = false
+    config.ssh.keys_only = true
+  else
+    abort 'Password-based Vagrant launch requires passwd in user-data' if password.empty?
+    config.vm.communicator = :winrm
+    config.winrm.username = username
+    config.winrm.password = password
+    config.winrm.transport = :ssl
+    config.winrm.ssl_peer_verification = false
+    config.winrm.port = 5986
+  end
+end

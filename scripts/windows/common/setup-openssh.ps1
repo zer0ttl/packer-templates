@@ -27,10 +27,11 @@ if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyCon
     Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."
 }
 
-# Set Authentication to public key
+ # Enable both launch-time authentication modes. Cloudbase-Init installs the
+ # supplied key and creates the supplied account during first boot.
 ((Get-Content -path C:\ProgramData\ssh\sshd_config -Raw) `
 -replace '#PubkeyAuthentication yes','PubkeyAuthentication yes' `
--replace '#PasswordAuthentication yes','PasswordAuthentication no' `
+-replace '#PasswordAuthentication yes','PasswordAuthentication yes' `
 -replace 'Match Group administrators','#Match Group administrators' `
 -replace 'AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys','#AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys') | Set-Content -Path C:\ProgramData\ssh\sshd_config
 
@@ -39,9 +40,6 @@ Restart-Service sshd
 
 # Create the .ssh directory
 New-item -Path $env:USERPROFILE -Name .ssh -ItemType Directory -force
-
-# Copy key
-Write-Output "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" | Out-File $env:USERPROFILE\.ssh\authorized_keys -Encoding ascii
 
 # Set the default shell for OpenSSH to powershell.exe
 # Reference: https://docs.ansible.com/ansible/latest/os_guide/windows_ssh.html#default-shell-configuration

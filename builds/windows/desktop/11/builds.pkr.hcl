@@ -26,7 +26,10 @@ locals {
   vm_name_pro                = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_version}-${var.vm_guest_os_edition_pro}"
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_core           = [
-                                "${local.scripts_path}/setup-openssh.ps1",
+                               "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/setup-packer-ssh.ps1",
+                                "${local.scripts_path}/setup-winrm.ps1",
+                                "${local.scripts_path}/setup-cloudbase-init.ps1",
                                 "${local.scripts_path}/qemu-agent.ps1",
                                 "${local.scripts_path}/power.ps1",
                                 "${local.scripts_path}/common-fixes.ps1",
@@ -82,7 +85,8 @@ source "qemu" "windows-desktop-ent" {
                                 vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                 vm_guest_os_timezone = var.vm_guest_os_timezone
                             }),
-                            "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
+                                "packer-ssh-authorized-key.txt" = "{{ .SSHPublicKey }}",
+                                "unattend.xml" = templatefile("${abspath(path.root)}/data/unattend.pkrtpl.hcl", {
                                 build_username       = var.build_username
                                 build_password       = var.build_password
                                 build_vmname         = var.build_vmname
@@ -101,8 +105,8 @@ source "qemu" "windows-desktop-ent" {
   shutdown_command     = var.vm_shutdown_command
   shutdown_timeout     = var.common_shutdown_timeout
   ssh_username         = var.build_username
-  ssh_private_key_file = var.communicator_key_file
-  ssh_wait_timeout     = var.communicator_timeout
+  temporary_key_pair_type = "ed25519"
+  ssh_timeout          = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
   vtpm                 = var.vm_vtpm
 }
@@ -145,9 +149,6 @@ source "qemu" "windows-desktop-ent" {
 //   memory               = var.vm_mem_size
 //   shutdown_command     = var.vm_shutdown_command
 //   shutdown_timeout     = var.common_shutdown_timeout
-//   ssh_username         = var.build_username
-//   ssh_private_key_file = var.communicator_key_file
-//   ssh_wait_timeout     = var.communicator_timeout
 //   vnc_bind_address     = var.vnc_bind_address
 //   vtpm                 = var.vm_vtpm
 // }
@@ -166,7 +167,9 @@ build {
   }
 
   post-processor "vagrant" {
+      keep_input_artifact = true
       compression_level  = 9
+      vagrantfile_template = "${abspath(path.root)}/../../../../vagrant/windows/Vagrantfile"
       output             = "packer_${local.vm_name_ent}_{{.Provider}}_{{.Architecture}}.box"
   }
 }

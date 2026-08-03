@@ -2,19 +2,6 @@
 # Microsoft Windows specific tasks.
 
 # ansible-lint: disable=line-length
-# Tasks for Password Expiration.
-- name: Disable Password Expiration
-  block:
-    - name: Disable Local Administrator Password Expiration
-      ansible.windows.win_user:
-        name: Administrator
-        password_never_expires: true
-
-    - name: Disable Password Expiration for "{{ build_username }}"
-      ansible.windows.win_user:
-        name: "{{ build_username }}"
-        password_never_expires: true
-
 - name: Explorer customisations
   block:
     - name: Show file extensions in Explorer
@@ -48,11 +35,11 @@
         data: 1
         type: dword
 
-    - name: Disable UAC
+    - name: Enable UAC
       ansible.windows.win_regedit:
         path: HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system
         name: EnableLUA
-        data: 0
+        data: 1
         type: dword
 
     - name: Set the default shell for OpenSSH to powershell.exe
@@ -109,7 +96,7 @@
       ansible.windows.win_powershell:
         script: |
           Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0 | Out-Null
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 0
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
           Enable-NetFirewallRule -Group '@FirewallAPI.dll,-28752'
 
 # Tasks for post setup.

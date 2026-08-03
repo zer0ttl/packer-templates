@@ -11,21 +11,6 @@
                 <SkipMachineOOBE>true</SkipMachineOOBE>
             </OOBE>
             <TimeZone>${vm_guest_os_timezone}</TimeZone>
-            <UserAccounts>
-                <AdministratorPassword>
-                    <Value>${build_username}</Value>
-                    <PlainText>true</PlainText>
-                </AdministratorPassword>
-            </UserAccounts>
-            <AutoLogon>
-                <Password>
-                    <Value>${build_password}</Value>
-                    <PlainText>true</PlainText>
-                </Password>
-                <Enabled>true</Enabled>
-                <LogonCount>1</LogonCount>
-                <Username>${build_username}</Username>
-            </AutoLogon>
         </component>
     </settings>
     <settings pass="specialize">
