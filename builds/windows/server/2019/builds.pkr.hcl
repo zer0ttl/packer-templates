@@ -55,7 +55,7 @@ locals {
                                 ])
 }
 
-source "qemu" "windows-server-standard-core" {
+source "qemu" "standard-core" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
   communicator              = var.vm_communicator
@@ -104,7 +104,7 @@ source "qemu" "windows-server-standard-core" {
   vnc_bind_address          = var.vnc_bind_address
 }
 
-source "qemu" "windows-server-standard-desktop" {
+source "qemu" "standard-desktop" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
   communicator              = var.vm_communicator
@@ -156,7 +156,7 @@ source "qemu" "windows-server-standard-desktop" {
   # vnc_port_min              = 5959
 }
 
-source "qemu" "windows-server-datacenter-core" {
+source "qemu" "datacenter-core" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
   communicator              = var.vm_communicator
@@ -205,7 +205,7 @@ source "qemu" "windows-server-datacenter-core" {
   vnc_bind_address          = var.vnc_bind_address
 }
 
-source "qemu" "windows-server-datacenter-desktop" {
+source "qemu" "datacenter-desktop" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
   communicator              = var.vm_communicator
@@ -254,12 +254,12 @@ source "qemu" "windows-server-datacenter-desktop" {
   vnc_bind_address          = var.vnc_bind_address
 }
 
-# windows-server-standard-core
+# standard-core
 build {
-  name = "windows-server-standard-core"
+  name = "standard-core"
 
   sources = [
-      "qemu.windows-server-standard-core"
+      "qemu.standard-core"
   ]
 
   provisioner "ansible" {
@@ -290,13 +290,13 @@ build {
   }
 }
 
-# windows-server-standard-desktop
+# standard-desktop
 build {
 
-  name = "windows-server-standard-desktop"
+  name = "standard-desktop"
 
   sources = [
-      "qemu.windows-server-standard-desktop"
+      "qemu.standard-desktop"
   ]
 
   provisioner "ansible" {
@@ -327,12 +327,12 @@ build {
   }
 }
 
-# windows-server-datacenter-core
+# datacenter-core
 build {
-  name = "windows-server-datacenter-core"
+  name = "datacenter-core"
 
   sources = [
-      "qemu.windows-server-datacenter-core"
+      "qemu.datacenter-core"
   ]
 
   provisioner "ansible" {
@@ -363,13 +363,13 @@ build {
   }
 }
 
-# windows-server-datacenter-desktop
+# datacenter-desktop
 build {
 
-  name = "windows-server-datacenter-desktop"
+  name = "datacenter-desktop"
 
   sources = [
-      "qemu.windows-server-datacenter-desktop"
+      "qemu.datacenter-desktop"
   ]
 
   provisioner "ansible" {

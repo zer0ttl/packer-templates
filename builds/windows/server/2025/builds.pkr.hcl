@@ -1,6 +1,6 @@
 /*
 
-  Build definition for different versions of Windows Server 2022.
+  Build definition for different versions of Windows Server 2025.
 */
 
 packer {
@@ -55,13 +55,19 @@ locals {
                                 ])
 }
 
-source "qemu" "windows-server-standard-core" {
+source "qemu" "standard-core" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
+  boot_command              = var.vm_boot_command
   communicator              = var.vm_communicator
   cpus                      = var.vm_cpu_count
+  cpu_model                 = var.vm_cpu_model
   disk_interface            = var.vm_disk_interface
   disk_size                 = var.vm_disk_size
+  machine_type              = var.vm_machine_type
+  efi_boot                  = true
+  efi_firmware_code         = var.vm_efi_firmware_code
+  efi_firmware_vars         = var.vm_efi_firmware_vars
   cd_files                  = local.vm_cd_files_core
   cd_content                = {
                                 "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
@@ -104,13 +110,19 @@ source "qemu" "windows-server-standard-core" {
   vnc_bind_address          = var.vnc_bind_address
 }
 
-source "qemu" "windows-server-standard-desktop" {
+source "qemu" "standard-desktop" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
+  boot_command              = var.vm_boot_command
   communicator              = var.vm_communicator
   cpus                      = var.vm_cpu_count
+  cpu_model                 = var.vm_cpu_model
   disk_interface            = var.vm_disk_interface
   disk_size                 = var.vm_disk_size
+  machine_type              = var.vm_machine_type
+  efi_boot                  = true
+  efi_firmware_code         = var.vm_efi_firmware_code
+  efi_firmware_vars         = var.vm_efi_firmware_vars
   cd_files                  = local.vm_cd_files_desktop
   cd_content                = {
                                 "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
@@ -156,13 +168,19 @@ source "qemu" "windows-server-standard-desktop" {
   vnc_port_min              = 5959
 }
 
-source "qemu" "windows-server-datacenter-core" {
+source "qemu" "datacenter-core" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
+  boot_command              = var.vm_boot_command
   communicator              = var.vm_communicator
   cpus                      = var.vm_cpu_count
+  cpu_model                 = var.vm_cpu_model
   disk_interface            = var.vm_disk_interface
   disk_size                 = var.vm_disk_size
+  machine_type              = var.vm_machine_type
+  efi_boot                  = true
+  efi_firmware_code         = var.vm_efi_firmware_code
+  efi_firmware_vars         = var.vm_efi_firmware_vars
   cd_files                  = local.vm_cd_files_core
   cd_content                = {
                                 "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
@@ -205,13 +223,19 @@ source "qemu" "windows-server-datacenter-core" {
   vnc_bind_address          = var.vnc_bind_address
 }
 
-source "qemu" "windows-server-datacenter-desktop" {
+source "qemu" "datacenter-desktop" {
   accelerator               = var.vm_accelerator
   boot_wait                 = var.vm_boot_wait
+  boot_command              = var.vm_boot_command
   communicator              = var.vm_communicator
   cpus                      = var.vm_cpu_count
+  cpu_model                 = var.vm_cpu_model
   disk_interface            = var.vm_disk_interface
   disk_size                 = var.vm_disk_size
+  machine_type              = var.vm_machine_type
+  efi_boot                  = true
+  efi_firmware_code         = var.vm_efi_firmware_code
+  efi_firmware_vars         = var.vm_efi_firmware_vars
   cd_files                  = local.vm_cd_files_desktop
   cd_content                = {
                                 "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
@@ -245,7 +269,7 @@ source "qemu" "windows-server-datacenter-desktop" {
   shutdown_timeout          = var.common_shutdown_timeout
   ssh_username              = var.build_username
   ssh_private_key_file      = var.communicator_key_file
-  ssh_timeout               = var.communicator_timeout
+  ssh_wait_timeout               = var.communicator_timeout
   ssh_clear_authorized_keys = var.communicator_clear_authorized_keys
   ssh_read_write_timeout    = var.communicator_read_write_timeout
   winrm_username            = var.build_username
@@ -254,12 +278,12 @@ source "qemu" "windows-server-datacenter-desktop" {
   vnc_bind_address          = var.vnc_bind_address
 }
 
-# windows-server-standard-core
+# standard-core
 build {
-  name = "windows-server-standard-core"
+  name = "standard-core"
 
   sources = [
-      "qemu.windows-server-standard-core"
+      "qemu.standard-core"
   ]
 
   provisioner "ansible" {
@@ -274,7 +298,7 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
@@ -290,13 +314,13 @@ build {
   }
 }
 
-# windows-server-standard-desktop
+# standard-desktop
 build {
 
-  name = "windows-server-standard-desktop"
+  name = "standard-desktop"
 
   sources = [
-      "qemu.windows-server-standard-desktop"
+      "qemu.standard-desktop"
   ]
 
   provisioner "ansible" {
@@ -311,7 +335,7 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
@@ -327,12 +351,12 @@ build {
   }
 }
 
-# windows-server-datacenter-core
+# datacenter-core
 build {
-  name = "windows-server-datacenter-core"
+  name = "datacenter-core"
 
   sources = [
-      "qemu.windows-server-datacenter-core"
+      "qemu.datacenter-core"
   ]
 
   provisioner "ansible" {
@@ -347,7 +371,7 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
@@ -363,13 +387,13 @@ build {
   }
 }
 
-# windows-server-datacenter-desktop
+# datacenter-desktop
 build {
 
-  name = "windows-server-datacenter-desktop"
+  name = "datacenter-desktop"
 
   sources = [
-      "qemu.windows-server-datacenter-desktop"
+      "qemu.datacenter-desktop"
   ]
 
   provisioner "ansible" {
@@ -384,7 +408,7 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",

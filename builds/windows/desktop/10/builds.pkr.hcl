@@ -49,7 +49,7 @@ locals {
                                 ]
 }
 
-source "qemu" "windows-desktop-enterprise" {
+source "qemu" "enterprise" {
 accelerator                 = var.vm_accelerator
 boot_wait                   = var.vm_boot_wait
 communicator                = var.vm_communicator
@@ -102,10 +102,10 @@ iso_urls                    = var.iso_urls
 }
 
 build {
-  name = "windows-desktop-enterprise"
+  name = "enterprise"
 
   sources = [
-      "source.qemu.windows-desktop-enterprise"
+      "source.qemu.enterprise"
   ]
 
   # provisioner "powershell" {

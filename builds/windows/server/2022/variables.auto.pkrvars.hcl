@@ -22,7 +22,7 @@ communicator_read_write_timeout     = "60s"
 
 // Provisioner: ansible settings
 ansible_use_proxy                   = false
-ansible_galaxy_force_with_deps      = true
+ansible_galaxy_force_with_deps      = false
 
 // Removable Media Settings
 iso_checksum        = "sha256:3e4fa6d8507b554856fc9ca6079cc402df11a8b79344871669f0251535255325"

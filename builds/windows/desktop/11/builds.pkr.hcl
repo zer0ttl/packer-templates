@@ -62,7 +62,7 @@ locals {
                                 ]
 }
 
-source "qemu" "windows-desktop-ent" {
+source "qemu" "enterprise" {
   accelerator           = var.vm_accelerator
   boot_wait             = var.vm_boot_wait
   communicator          = var.vm_communicator
@@ -107,7 +107,7 @@ source "qemu" "windows-desktop-ent" {
   vtpm                 = var.vm_vtpm
 }
 
-// source "qemu" "windows-desktop-pro" {
+// source "qemu" "professional" {
 //   accelerator           = var.vm_accelerator
 //   boot_wait             = var.vm_boot_wait
 //   communicator          = var.vm_communicator
@@ -153,10 +153,10 @@ source "qemu" "windows-desktop-ent" {
 // }
 
 build {
-  name = "windows-desktop-ent"
+  name = "enterprise"
 
   sources = [
-      "source.qemu.windows-desktop-ent"
+      "source.qemu.enterprise"
   ]
 
   provisioner "powershell" {
@@ -173,10 +173,10 @@ build {
 
 // build {
 
-//   name = "windows-desktop-pro"
+//   name = "professional"
 
 //   sources = [
-//       "source.qemu.windows-desktop-pro"
+//       "source.qemu.professional"
 //   ]
 
 //   provisioner "powershell" {

@@ -13,7 +13,7 @@
             <TimeZone>${vm_guest_os_timezone}</TimeZone>
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>${build_username}</Value>
+                    <Value>${build_password}</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
             </UserAccounts>
