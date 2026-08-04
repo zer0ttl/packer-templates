@@ -1,15 +1,17 @@
 # Windows 11 Desktop
 
-This template builds Windows 11 Enterprise Evaluation with the hardware features
-required by Windows 11: a compatible host CPU, UEFI Secure Boot, TPM 2.0, at
-least 4 GB of memory, and at least 64 GB of storage. The answer file does not
-bypass Windows hardware checks.
+This template builds Windows 11 Enterprise Evaluation with UEFI Secure Boot,
+TPM 2.0, at least 4 GB of memory, and at least 64 GB of storage. The answer file
+bypasses only the Windows Setup CPU eligibility check so the image can be built
+on the Xeon E5-2620 v3 host. TPM, Secure Boot, memory, and storage checks remain
+enabled.
 
 ## Build host requirements
 
 The build host must provide:
 
-- An x86-64 CPU supported by Windows 11 with hardware virtualization enabled.
+- An x86-64 CPU with hardware virtualization enabled. The CPU eligibility
+  exception for this build host is documented below.
 - Linux KVM access for the user running Packer (`/dev/kvm` must be readable and
   writable).
 - Packer 1.10 or newer and the plugins declared in `builds.pkr.hcl`.
@@ -21,12 +23,11 @@ The build host must provide:
 - Vagrant with the libvirt provider for the Vagrant post-processor.
 
 The template uses `cpu_model = "host"`, so Windows sees the build host's CPU
-model. Compare the processor reported by `lscpu` with Microsoft's
+model. The Xeon E5-2620 v3 is not on Microsoft's
 [Windows 11 22H2 and 23H2 supported Intel processors](https://learn.microsoft.com/en-us/windows-hardware/design/minimum/supported/windows-11-22h2-supported-intel-processors)
-or the corresponding AMD list. The Xeon E5-2620 v3 recorded in this repository's
-existing Server 2025 build log is not on the Windows 11 support list; a build on
-that processor can still fail the CPU check. This template intentionally does
-not bypass that check.
+list. The unattended setup therefore sets only `BypassCPUCheck`; the resulting
+Windows installation is unsupported by Microsoft even though the remaining
+Windows 11 hardware and security requirements are satisfied.
 
 On Ubuntu or Debian, install the virtualization dependencies with:
 

@@ -46,6 +46,13 @@
             </DriverPaths>
       </component>
       <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+         <RunSynchronous>
+            <RunSynchronousCommand wcm:action="add">
+               <Order>1</Order>
+               <Description>Bypass CPU eligibility check for the build host</Description>
+               <Path>reg.exe add HKLM\SYSTEM\Setup\LabConfig /v BypassCPUCheck /t REG_DWORD /d 1 /f</Path>
+            </RunSynchronousCommand>
+         </RunSynchronous>
          <DiskConfiguration>
             <Disk wcm:action="add">
                <DiskID>0</DiskID>
