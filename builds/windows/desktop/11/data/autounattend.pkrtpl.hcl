@@ -48,36 +48,64 @@
       <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
          <DiskConfiguration>
             <Disk wcm:action="add">
+               <DiskID>0</DiskID>
+               <WillWipeDisk>true</WillWipeDisk>
                <CreatePartitions>
+                  <!-- Windows Recovery Environment partition -->
                   <CreatePartition wcm:action="add">
-                        <Type>Primary</Type>
-                        <Order>1</Order>
-                        <Size>350</Size>
+                     <Order>1</Order>
+                     <Type>Primary</Type>
+                     <Size>550</Size>
                   </CreatePartition>
+                  <!-- EFI system partition -->
                   <CreatePartition wcm:action="add">
-                        <Order>2</Order>
-                        <Type>Primary</Type>
-                        <Extend>true</Extend>
+                     <Order>2</Order>
+                     <Type>EFI</Type>
+                     <Size>100</Size>
+                  </CreatePartition>
+                  <!-- Microsoft reserved partition -->
+                  <CreatePartition wcm:action="add">
+                     <Order>3</Order>
+                     <Type>MSR</Type>
+                     <Size>128</Size>
+                  </CreatePartition>
+                  <!-- Windows partition -->
+                  <CreatePartition wcm:action="add">
+                     <Order>4</Order>
+                     <Type>Primary</Type>
+                     <Extend>true</Extend>
                   </CreatePartition>
                </CreatePartitions>
                <ModifyPartitions>
+                  <!-- Windows Recovery Environment partition -->
                   <ModifyPartition wcm:action="add">
-                        <Active>true</Active>
-                        <Format>NTFS</Format>
-                        <Label>boot</Label>
-                        <Order>1</Order>
-                        <PartitionID>1</PartitionID>
+                     <Order>1</Order>
+                     <PartitionID>1</PartitionID>
+                     <Label>WINRE</Label>
+                     <Format>NTFS</Format>
+                     <TypeID>DE94BBA4-06D1-4D40-A16A-BFD50179D6AC</TypeID>
                   </ModifyPartition>
+                  <!-- EFI system partition -->
                   <ModifyPartition wcm:action="add">
-                        <Format>NTFS</Format>
-                        <Label>Windows</Label>
-                        <Letter>C</Letter>
-                        <Order>2</Order>
-                        <PartitionID>2</PartitionID>
+                     <Order>2</Order>
+                     <PartitionID>2</PartitionID>
+                     <Label>System</Label>
+                     <Format>FAT32</Format>
+                  </ModifyPartition>
+                  <!-- Microsoft reserved partition -->
+                  <ModifyPartition wcm:action="add">
+                     <Order>3</Order>
+                     <PartitionID>3</PartitionID>
+                  </ModifyPartition>
+                  <!-- Windows partition -->
+                  <ModifyPartition wcm:action="add">
+                     <Order>4</Order>
+                     <PartitionID>4</PartitionID>
+                     <Label>Windows</Label>
+                     <Letter>C</Letter>
+                     <Format>NTFS</Format>
                   </ModifyPartition>
                </ModifyPartitions>
-               <DiskID>0</DiskID>
-               <WillWipeDisk>true</WillWipeDisk>
             </Disk>
          </DiskConfiguration>
          <ImageInstall>
@@ -90,7 +118,7 @@
                </InstallFrom>
                <InstallTo>
                   <DiskID>0</DiskID>
-                  <PartitionID>2</PartitionID>
+                  <PartitionID>4</PartitionID>
                </InstallTo>
             </OSImage>
          </ImageInstall>
