@@ -5,6 +5,8 @@ Set-StrictMode -Version Latest
 $ProgressPreference = 'SilentlyContinue'
 $ErrorActionPreference = 'Stop'
 
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Starting common fixes"
+
 trap {
     Write-Host
     Write-Host "ERROR: $_"
@@ -66,3 +68,4 @@ reg.exe add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" 
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0
 
 Write-Host "Finished fixes.."
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Completed common fixes"

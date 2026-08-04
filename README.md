@@ -263,8 +263,8 @@ build {
     elevated_user        = "${var.build_username}"
     elevated_password    = "${var.build_password}"
     scripts = [
-      "${local.scripts_path}/qemu-agent.ps1",
-      "${local.scripts_path}/post-setup.ps1"
+      "${local.scripts_path}/install-virtio-guest-tools.ps1",
+      "${local.scripts_path}/stage-setup-complete.ps1"
     ]
     only                 = ["qemu.windows-server-standard-core", "qemu.windows-server-datacenter-core"]
   }
@@ -273,9 +273,9 @@ build {
     elevated_user        = "${var.build_username}"
     elevated_password    = "${var.build_password}"
     scripts = [
-      "${local.scripts_path}/qemu-agent.ps1",
-      "${local.scripts_path}/spice-tools.ps1",
-      "${local.scripts_path}/post-setup.ps1"
+      "${local.scripts_path}/install-virtio-guest-tools.ps1",
+      "${local.scripts_path}/install-spice-tools.ps1",
+      "${local.scripts_path}/stage-setup-complete.ps1"
     ]
     only                 = ["qemu.windows-server-standard-desktop", "qemu.windows-server-datacenter-desktop"]
   }

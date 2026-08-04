@@ -8,4 +8,4 @@ netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" n
 netsh advfirewall firewall set rule name="OpenSSH SSH Server (sshd)" new action=block
 
 @REM Run Sysprep
-%WINDIR%\System32\Sysprep\sysprep.exe /generalize /oobe /shutdown /unattend:E:\unattend.xml
+%WINDIR%\System32\Sysprep\sysprep.exe /quiet /generalize /oobe /shutdown /unattend:E:\unattend.xml

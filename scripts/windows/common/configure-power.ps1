@@ -5,6 +5,8 @@ Set-StrictMode -Version Latest
 $ProgressPreference = 'SilentlyContinue'
 $ErrorActionPreference = 'Stop'
 
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Starting power configuration"
+
 trap {
   Write-Host
   Write-Host "ERROR: $_"
@@ -39,3 +41,5 @@ Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name Hibe
 # Reset the autologon count.
 # Reference: https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-logoncount#logoncount-known-issue
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0
+
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Completed power configuration"

@@ -29,29 +29,29 @@ locals {
   ansible_path = "${abspath(path.root)}/../../../../ansible"
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_core           = [
-                                "${local.scripts_path}/setup-openssh.ps1",
-                                "${local.scripts_path}/setup-winrm.ps1",
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1",
+                                "${local.scripts_path}/install-openssh.ps1",
+                                "${local.scripts_path}/configure-winrm.ps1",
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1",
                                 "${local.scripts_path}/SetupComplete.cmd",
                                 "${local.scripts_path}/sysprep.bat"
                               ]
   vm_cd_files_desktop        = concat(local.vm_cd_files_core, [
-                                "${local.scripts_path}/spice-tools.ps1",
-                                "${local.scripts_path}/bginfo.ps1",
+                                "${local.scripts_path}/install-spice-tools.ps1",
+                                "${local.scripts_path}/install-bginfo.ps1",
                                 "${local.scripts_path}/bginfo.bgi"
                               ])
   vm_provision_files_core    = [
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1"
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1"
                                 ]
   vm_provision_files_desktop = concat(local.vm_provision_files_core, [
-                                "${local.scripts_path}/spice-tools.ps1",
-                                "${local.scripts_path}/bginfo.ps1"
+                                "${local.scripts_path}/install-spice-tools.ps1",
+                                "${local.scripts_path}/install-bginfo.ps1"
                                 ])
 }
 
