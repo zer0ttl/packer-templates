@@ -49,6 +49,19 @@ test -r /usr/share/OVMF/OVMF_VARS_4M.ms.fd
 Run `packer init .` in this directory before the first build so Packer installs
 the required plugins.
 
+## Installation media layout
+
+The QEMU build attaches the Windows installation ISO, Packer's generated
+configuration CD, and the VirtIO driver ISO. Windows Setup must enumerate the
+VirtIO ISO as `F:` because the `windowsPE` driver paths use that drive. The
+answer file validates `F:\viostor\w11\amd64\viostor.inf` before installation
+and stops immediately if the media layout is incorrect, instead of continuing
+to an interactive disk or driver prompt.
+
+The generated configuration CD does not require a fixed drive letter. During
+the first automatic logon, the answer file searches mounted filesystem drives
+for `install-openssh.ps1` and runs the copy found at the root of that CD.
+
 ## Runtime requirements
 
 The installed disk uses GPT and an EFI system partition. A VM created from the

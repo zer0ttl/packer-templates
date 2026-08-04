@@ -49,6 +49,11 @@
          <RunSynchronous>
             <RunSynchronousCommand wcm:action="add">
                <Order>1</Order>
+               <Description>Validate VirtIO driver media</Description>
+               <Path>cmd.exe /c if not exist F:\viostor\w11\amd64\viostor.inf exit /b 1</Path>
+            </RunSynchronousCommand>
+            <RunSynchronousCommand wcm:action="add">
+               <Order>2</Order>
                <Description>Bypass CPU eligibility check for the build host</Description>
                <Path>reg.exe add HKLM\SYSTEM\Setup\LabConfig /v BypassCPUCheck /t REG_DWORD /d 1 /f</Path>
             </RunSynchronousCommand>
@@ -133,9 +138,6 @@
             <AcceptEula>true</AcceptEula>
             <FullName>${build_username}</FullName>
             <Organization>${build_orgname}</Organization>
-            <ProductKey>
-               <WillShowUI>OnError</WillShowUI>
-            </ProductKey>
          </UserData>
          <EnableFirewall>false</EnableFirewall>
       </component>
@@ -158,12 +160,6 @@
          <TimeZone>${vm_guest_os_timezone}</TimeZone>
          <RegisteredOwner />
       </component>
-      <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-         <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
-      </component>
-      <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-OutOfBoxExperience" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-         <DoNotOpenInitialConfigurationTasksAtLogon>true</DoNotOpenInitialConfigurationTasksAtLogon>
-      </component>
       <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
          <SkipAutoActivation>true</SkipAutoActivation>
       </component>
@@ -183,15 +179,14 @@
                <PlainText>true</PlainText>
             </Password>
             <Enabled>true</Enabled>
+            <LogonCount>1</LogonCount>
             <Username>${build_username}</Username>
          </AutoLogon>
          <OOBE>
             <HideEULAPage>true</HideEULAPage>
-            <HideLocalAccountScreen>true</HideLocalAccountScreen>
             <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
             <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
             <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
-            <NetworkLocation>Work</NetworkLocation>
             <ProtectYourPC>2</ProtectYourPC>
          </OOBE>
          <UserAccounts>
@@ -214,21 +209,10 @@
          </UserAccounts>
          <FirstLogonCommands>
             <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force"</CommandLine>
-               <Description>Set Execution Policy 64-Bit</Description>
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; Set-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0; $script=(Get-PSDrive -PSProvider FileSystem).Root | ForEach-Object { Join-Path $_ 'install-openssh.ps1' } | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1; if (-not $script) { throw 'Cannot locate install-openssh.ps1 on mounted setup media.' }; &amp; $script"</CommandLine>
+               <Description>Configure the initial build session</Description>
                <Order>1</Order>
-               <RequiresUserInput>true</RequiresUserInput>
-            </SynchronousCommand>
-            <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force"</CommandLine>
-               <Description>Set Execution Policy 32-Bit</Description>
-               <Order>2</Order>
-               <RequiresUserInput>true</RequiresUserInput>
-            </SynchronousCommand>
-            <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\install-openssh.ps1</CommandLine>
-               <Order>3</Order>
-               <Description>Initial Configuration</Description>
+               <RequiresUserInput>false</RequiresUserInput>
             </SynchronousCommand>
          </FirstLogonCommands>
       </component>

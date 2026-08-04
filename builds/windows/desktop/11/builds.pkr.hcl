@@ -92,6 +92,8 @@ source "qemu" "enterprise" {
                                 build_username       = var.build_username
                                 build_password       = var.build_password
                                 build_vmname         = var.build_vmname
+                                vm_guest_os_language = var.vm_guest_os_language
+                                vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                 vm_guest_os_timezone = var.vm_guest_os_timezone
                             })
                         }
@@ -144,6 +146,8 @@ source "qemu" "enterprise" {
 //                                 build_username       = var.build_username
 //                                 build_password       = var.build_password
 //                                 build_vmname         = var.build_vmname
+//                                 vm_guest_os_language = var.vm_guest_os_language
+//                                 vm_guest_os_keyboard = var.vm_guest_os_keyboard
 //                                 vm_guest_os_timezone = var.vm_guest_os_timezone
 //                             })
 //                         }
