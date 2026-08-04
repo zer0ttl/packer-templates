@@ -5,6 +5,8 @@ Set-StrictMode -Version Latest
 $ProgressPreference = 'SilentlyContinue'
 $ErrorActionPreference = 'Stop'
 
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Starting Bginfo setup"
+
 trap {
     Write-Host
     Write-Host "ERROR: $_"
@@ -31,3 +33,5 @@ Write-Host "Installation of Bginfo complete"
 # Reset the autologon count.
 # Reference: https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-logoncount#logoncount-known-issue
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0
+
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Completed Bginfo setup"

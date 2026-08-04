@@ -14,15 +14,39 @@ variable "vm_machine_type" {
   description = "The type of machine emulation to use. Defaults to 'pc'. Use 'q35' for UEFI machines."
 }
 
+variable "vm_efi_firmware_code" {
+  type        = string
+  description = "Path to the OVMF UEFI firmware code file (read-only)."
+  default     = "/usr/share/OVMF/OVMF_CODE_4M.fd"
+}
+
+variable "vm_efi_firmware_vars" {
+  type        = string
+  description = "Path to a read-only template of the OVMF UEFI firmware vars file. Packer copies it to the output directory as a writable copy."
+  default     = "/usr/share/OVMF/OVMF_VARS_4M.fd"
+}
+
 variable "vm_boot_wait" {
   type        = string
   description = "The time to wait before boot."
+}
+
+variable "vm_boot_command" {
+  type        = list(string)
+  description = "The virtual machine boot command."
+  default     = []
 }
 
 variable "vm_communicator" {
   type        = string
   description = "The type of connection will be established to the machine."
   default     = "winrm"
+}
+
+variable "vm_cpu_model" {
+  type        = string
+  description = "The QEMU CPU model. Use 'host' for Windows to pass through host CPU features."
+  default     = ""
 }
 
 variable "vm_cpu_count" {

@@ -4,6 +4,7 @@
 *.box
 *.ovf
 *.ps1
+!scripts/windows/common/*.ps1
 packer_cache/
 /.vagrant
 provision.yml

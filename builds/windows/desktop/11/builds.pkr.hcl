@@ -26,43 +26,43 @@ locals {
   vm_name_pro                = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_version}-${var.vm_guest_os_edition_pro}"
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_core           = [
-                                "${local.scripts_path}/setup-openssh.ps1",
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1",
+                                "${local.scripts_path}/install-openssh.ps1",
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1",
                                 "${local.scripts_path}/SetupComplete.cmd",
                                 "${local.scripts_path}/sysprep.bat"
                               ]
   vm_cd_files_desktop        = [
-                                "${local.scripts_path}/setup-openssh.ps1",
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/spice-tools.ps1",
-                                "${local.scripts_path}/bginfo.ps1",
+                                "${local.scripts_path}/install-openssh.ps1",
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/install-spice-tools.ps1",
+                                "${local.scripts_path}/install-bginfo.ps1",
                                 "${local.scripts_path}/bginfo.bgi",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1",
                                 "${local.scripts_path}/SetupComplete.cmd",
                                 "${local.scripts_path}/sysprep.bat"
                               ]
   vm_provision_files_core    = [
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1"
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1"
                                 ]
   vm_provision_files_desktop = [
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/spice-tools.ps1",
-                                "${local.scripts_path}/bginfo.ps1",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1"
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/install-spice-tools.ps1",
+                                "${local.scripts_path}/install-bginfo.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1"
                                 ]
 }
 
-source "qemu" "windows-desktop-ent" {
+source "qemu" "enterprise" {
   accelerator           = var.vm_accelerator
   boot_wait             = var.vm_boot_wait
   communicator          = var.vm_communicator
@@ -107,7 +107,7 @@ source "qemu" "windows-desktop-ent" {
   vtpm                 = var.vm_vtpm
 }
 
-// source "qemu" "windows-desktop-pro" {
+// source "qemu" "professional" {
 //   accelerator           = var.vm_accelerator
 //   boot_wait             = var.vm_boot_wait
 //   communicator          = var.vm_communicator
@@ -153,10 +153,10 @@ source "qemu" "windows-desktop-ent" {
 // }
 
 build {
-  name = "windows-desktop-ent"
+  name = "enterprise"
 
   sources = [
-      "source.qemu.windows-desktop-ent"
+      "source.qemu.enterprise"
   ]
 
   provisioner "powershell" {
@@ -173,10 +173,10 @@ build {
 
 // build {
 
-//   name = "windows-desktop-pro"
+//   name = "professional"
 
 //   sources = [
-//       "source.qemu.windows-desktop-pro"
+//       "source.qemu.professional"
 //   ]
 
 //   provisioner "powershell" {

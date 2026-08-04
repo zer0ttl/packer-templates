@@ -1,7 +1,9 @@
 // Virtual Machine Hardware Settings
 vm_accelerator              = "kvm"
-vm_boot_wait                = "30s"
+vm_boot_wait                = "5s"
+vm_boot_command             = ["<enter>"]
 vm_cpu_count                = 4
+vm_cpu_model                = "host"
 vm_disk_interface           = "virtio"
 vm_disk_size                = 128000
 vm_image_format             = "qcow2"
@@ -9,6 +11,8 @@ vm_headless                 = true
 vm_net_device               = "virtio-net"
 vm_mem_size                 = 8192
 vm_machine_type             = "q35"
+vm_efi_firmware_vars        = "/usr/share/OVMF/OVMF_VARS_4M.fd"
+vm_efi_firmware_code        = "/usr/share/OVMF/OVMF_CODE_4M.fd"
 // vm_shutdown_command      = "shutdown /s /t 10 /f /d p:4:1 /c \"Shutdown by Packer\""
 vm_shutdown_command         = "E:\\sysprep.bat"
 
@@ -23,7 +27,7 @@ communicator_read_write_timeout     = "60s"
 
 // Provisioner: ansible settings
 ansible_use_proxy                   = false
-ansible_galaxy_force_with_deps      = true
+ansible_galaxy_force_with_deps      = false
 
 // Removable Media Settings
 iso_checksum = "sha256:d0ef4502e350e3c6c53c15b1b3020d38a5ded011bf04998e950720ac8579b23d"

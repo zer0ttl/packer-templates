@@ -212,13 +212,18 @@
                <RequiresUserInput>true</RequiresUserInput>
             </SynchronousCommand>
             <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\setup-openssh.ps1</CommandLine>
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\install-virtio-guest-tools.ps1</CommandLine>
                <Order>3</Order>
+               <Description>Install VirtIO guest tools</Description>
+            </SynchronousCommand>
+            <SynchronousCommand wcm:action="add">
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\install-openssh.ps1</CommandLine>
+               <Order>4</Order>
                <Description>Install and configure OpenSSH</Description>
             </SynchronousCommand>
             <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\setup-winrm.ps1</CommandLine>
-               <Order>4</Order>
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\configure-winrm.ps1</CommandLine>
+               <Order>5</Order>
                <Description>Enable and configure WinRM</Description>
             </SynchronousCommand>
          </FirstLogonCommands>

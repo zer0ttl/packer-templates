@@ -3,6 +3,8 @@
     Enables SSH on Windows builds.
 #>
 
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Starting OpenSSH setup"
+
 # Make sure that OpenSSH is available
 $OpenSSHServer = $(Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Server*').Name
 $OpenSSHClient = $(Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Client*').Name
@@ -57,3 +59,5 @@ New-ItemProperty @shellParams
 # Reset the autologon count.
 # Reference: https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-logoncount#logoncount-known-issue
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0
+
+Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Completed OpenSSH setup"

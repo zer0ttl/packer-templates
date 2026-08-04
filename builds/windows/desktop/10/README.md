@@ -2,7 +2,7 @@
 
 Disregard below.
 
-Now all windows templates run `E:\setup-winrm.ps1` and `E:\setup-openssh.ps1` during unattended setup.
+Now all windows templates run `E:\configure-winrm.ps1` and `E:\install-openssh.ps1` during unattended setup.
 
 All windows tempaltes use winrm as the communicator.
 
@@ -22,7 +22,7 @@ That's all folks!
 Windows 10 build:
 - Both SSH and WinRM builds have been tested to be working.
 - In order to change the communicator, changes have to be made in 4 places.
-    1. `autounattend.pkrtpl.hcl` line 191: Change `E:\setup-winrm.ps1` to `E:\setup-openssh.ps1`
+    1. `autounattend.pkrtpl.hcl` line 191: Change `E:\configure-winrm.ps1` to `E:\install-openssh.ps1`
     2. `windows.pkrvars.hcl` line 15: Change `vm_communicator = "winrm"` to `vm_communicator = "ssh"`
     3. `sysprep.bat`: Comment the firewall block rule for winrm and uncomment the firewall block rule for ssh
     4. `SetupComplete.cmd`: Comment the firewall allow rule for winrm and uncomment the firewall allow rule for ssh

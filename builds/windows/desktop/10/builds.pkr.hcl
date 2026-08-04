@@ -27,29 +27,29 @@ locals {
   ansible_path = "${abspath(path.root)}/../../../../ansible"
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_desktop        = [
-                                "${local.scripts_path}/setup-openssh.ps1",
-                                "${local.scripts_path}/setup-winrm.ps1",
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/spice-tools.ps1",
-                                "${local.scripts_path}/bginfo.ps1",
+                                "${local.scripts_path}/install-openssh.ps1",
+                                "${local.scripts_path}/configure-winrm.ps1",
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/install-spice-tools.ps1",
+                                "${local.scripts_path}/install-bginfo.ps1",
                                 "${local.scripts_path}/bginfo.bgi",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1",
                                 "${local.scripts_path}/SetupComplete.cmd",
                                 "${local.scripts_path}/sysprep.bat"
                               ]
   vm_provision_files_desktop = [
-                                "${local.scripts_path}/qemu-agent.ps1",
-                                "${local.scripts_path}/spice-tools.ps1",
-                                "${local.scripts_path}/bginfo.ps1",
-                                "${local.scripts_path}/power.ps1",
-                                "${local.scripts_path}/common-fixes.ps1",
-                                "${local.scripts_path}/post-setup.ps1"
+                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
+                                "${local.scripts_path}/install-spice-tools.ps1",
+                                "${local.scripts_path}/install-bginfo.ps1",
+                                "${local.scripts_path}/configure-power.ps1",
+                                "${local.scripts_path}/apply-common-fixes.ps1",
+                                "${local.scripts_path}/stage-setup-complete.ps1"
                                 ]
 }
 
-source "qemu" "windows-desktop-enterprise" {
+source "qemu" "enterprise" {
 accelerator                 = var.vm_accelerator
 boot_wait                   = var.vm_boot_wait
 communicator                = var.vm_communicator
@@ -102,10 +102,10 @@ iso_urls                    = var.iso_urls
 }
 
 build {
-  name = "windows-desktop-enterprise"
+  name = "enterprise"
 
   sources = [
-      "source.qemu.windows-desktop-enterprise"
+      "source.qemu.enterprise"
   ]
 
   # provisioner "powershell" {
