@@ -27,8 +27,8 @@
           - /norestart
       when: item.stat.exists
       loop: "{{ locate.results }}"
-      async: 60
-      poll: 10
+      # async: 300
+      # poll: 10
 
 - name: Import Red Hat Certificate
   block:
@@ -68,8 +68,8 @@
         path: https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe
         arguments:
           - /S
-      async: 60
-      poll: 10
+      # async: 300
+      # poll: 10
 
 - name: Start services
   block:
@@ -82,5 +82,5 @@
         - qemu-ga
         - spice-agent
         - vdservice
-      async: 60
-      poll: 10
+      # async: 300
+      # poll: 10

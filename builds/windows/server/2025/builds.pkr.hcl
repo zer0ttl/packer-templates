@@ -298,7 +298,8 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  # "--extra-vars", "win_async_startup_timeout=120",
+                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
@@ -335,7 +336,8 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  # "--extra-vars", "win_async_startup_timeout=120",
+                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
@@ -371,7 +373,8 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  # "--extra-vars", "win_async_startup_timeout=120",
+                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
@@ -408,7 +411,8 @@ build {
                                 ]
       ansible_ssh_extra_args  = ["'-o ControlMaster=no -o ControlPersist=60s -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o TCPKeepAlive=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"]
       extra_arguments         = [
-                                  "--extra-vars", "win_async_startup_timeout=120", "--extra-vars", "ansible_connection='${var.vm_communicator}'",
+                                  # "--extra-vars", "win_async_startup_timeout=120",
+                                  "--extra-vars", "ansible_connection='${var.vm_communicator}'",
                                   "--extra-vars", "ansible_shell_type='powershell'",
                                   "--extra-vars", "ansible_shell_executable='none'",
                                   "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
