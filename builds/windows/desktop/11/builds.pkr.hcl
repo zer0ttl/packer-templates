@@ -47,13 +47,11 @@ locals {
                                 "${local.scripts_path}/sysprep.bat"
                               ]
   vm_provision_files_core    = [
-                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
                                 "${local.scripts_path}/configure-power.ps1",
                                 "${local.scripts_path}/apply-common-fixes.ps1",
                                 "${local.scripts_path}/stage-setup-complete.ps1"
                                 ]
   vm_provision_files_desktop = [
-                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
                                 "${local.scripts_path}/install-spice-tools.ps1",
                                 "${local.scripts_path}/install-bginfo.ps1",
                                 "${local.scripts_path}/configure-power.ps1",
@@ -65,10 +63,16 @@ locals {
 source "qemu" "enterprise" {
   accelerator           = var.vm_accelerator
   boot_wait             = var.vm_boot_wait
+  boot_command          = var.vm_boot_command
   communicator          = var.vm_communicator
   cpus                  = var.vm_cpu_count
+  cpu_model             = var.vm_cpu_model
   disk_interface        = var.vm_disk_interface
   disk_size             = var.vm_disk_size
+  machine_type          = var.vm_machine_type
+  efi_boot              = true
+  efi_firmware_code     = var.vm_efi_firmware_code
+  efi_firmware_vars     = var.vm_efi_firmware_vars
   cd_files              = local.vm_cd_files_core
   cd_content            = {
                             "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
@@ -86,6 +90,8 @@ source "qemu" "enterprise" {
                                 build_username       = var.build_username
                                 build_password       = var.build_password
                                 build_vmname         = var.build_vmname
+                                vm_guest_os_language = var.vm_guest_os_language
+                                vm_guest_os_keyboard = var.vm_guest_os_keyboard
                                 vm_guest_os_timezone = var.vm_guest_os_timezone
                             })
                         }
@@ -95,7 +101,8 @@ source "qemu" "enterprise" {
   iso_urls             = var.iso_urls
   net_device           = var.vm_net_device
   qemuargs             = [
-                            ["-cdrom", "${var.iso_virtio_windows}"]
+                            ["-cdrom", "${var.iso_virtio_windows}"],
+                            ["-global", "driver=cfi.pflash01,property=secure,value=on"]
                          ]
   memory               = var.vm_mem_size
   shutdown_command     = var.vm_shutdown_command
@@ -110,10 +117,16 @@ source "qemu" "enterprise" {
 // source "qemu" "professional" {
 //   accelerator           = var.vm_accelerator
 //   boot_wait             = var.vm_boot_wait
+//   boot_command          = var.vm_boot_command
 //   communicator          = var.vm_communicator
 //   cpus                  = var.vm_cpu_count
+//   cpu_model             = var.vm_cpu_model
 //   disk_interface        = var.vm_disk_interface
 //   disk_size             = var.vm_disk_size
+//   machine_type          = var.vm_machine_type
+//   efi_boot              = true
+//   efi_firmware_code     = var.vm_efi_firmware_code
+//   efi_firmware_vars     = var.vm_efi_firmware_vars
 //   cd_files              = local.vm_cd_files_desktop
 //   cd_content            = {
 //                             "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
@@ -131,6 +144,8 @@ source "qemu" "enterprise" {
 //                                 build_username       = var.build_username
 //                                 build_password       = var.build_password
 //                                 build_vmname         = var.build_vmname
+//                                 vm_guest_os_language = var.vm_guest_os_language
+//                                 vm_guest_os_keyboard = var.vm_guest_os_keyboard
 //                                 vm_guest_os_timezone = var.vm_guest_os_timezone
 //                             })
 //                         }
@@ -140,7 +155,8 @@ source "qemu" "enterprise" {
 //   iso_urls             = var.iso_urls
 //   net_device           = var.vm_net_device
 //   qemuargs             = [
-//                             ["-cdrom", "${var.iso_virtio_windows}"]
+//                             ["-cdrom", "${var.iso_virtio_windows}"],
+//                             ["-global", "driver=cfi.pflash01,property=secure,value=on"]
 //                          ]
 //   memory               = var.vm_mem_size
 //   shutdown_command     = var.vm_shutdown_command

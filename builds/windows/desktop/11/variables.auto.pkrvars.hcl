@@ -1,14 +1,19 @@
 // Virtual Machine Hardware Settings
-vm_accelerator = "kvm"
-vm_boot_wait = "30s"
-vm_cpu_count = 4
-vm_disk_interface = "virtio"
-vm_disk_size = 128000
-vm_image_format = "qcow2"
-vm_headless = true
-vm_vtpm = true
-vm_net_device = "virtio-net"
-vm_mem_size = 8192
+vm_accelerator       = "kvm"
+vm_boot_wait         = "5s"
+vm_boot_command      = ["<enter>"]
+vm_cpu_count         = 4
+vm_cpu_model         = "host"
+vm_disk_interface    = "virtio"
+vm_disk_size         = 128000
+vm_image_format      = "qcow2"
+vm_headless          = true
+vm_vtpm              = true
+vm_net_device        = "virtio-net"
+vm_mem_size          = 8192
+vm_machine_type      = "q35,smm=on"
+vm_efi_firmware_code = "/usr/share/OVMF/OVMF_CODE_4M.secboot.fd"
+vm_efi_firmware_vars = "/usr/share/OVMF/OVMF_VARS_4M.ms.fd"
 // vm_shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Shutdown by Packer\""
 vm_shutdown_command = "E:\\sysprep.bat"
 

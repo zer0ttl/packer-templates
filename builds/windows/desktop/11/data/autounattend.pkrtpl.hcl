@@ -46,38 +46,78 @@
             </DriverPaths>
       </component>
       <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+         <RunSynchronous>
+            <RunSynchronousCommand wcm:action="add">
+               <Order>1</Order>
+               <Description>Validate VirtIO driver media</Description>
+               <Path>cmd.exe /c if not exist F:\viostor\w11\amd64\viostor.inf exit /b 1</Path>
+            </RunSynchronousCommand>
+            <RunSynchronousCommand wcm:action="add">
+               <Order>2</Order>
+               <Description>Bypass CPU eligibility check for the build host</Description>
+               <Path>reg.exe add HKLM\SYSTEM\Setup\LabConfig /v BypassCPUCheck /t REG_DWORD /d 1 /f</Path>
+            </RunSynchronousCommand>
+         </RunSynchronous>
          <DiskConfiguration>
             <Disk wcm:action="add">
+               <DiskID>0</DiskID>
+               <WillWipeDisk>true</WillWipeDisk>
                <CreatePartitions>
+                  <!-- Windows Recovery Environment partition -->
                   <CreatePartition wcm:action="add">
-                        <Type>Primary</Type>
-                        <Order>1</Order>
-                        <Size>350</Size>
+                     <Order>1</Order>
+                     <Type>Primary</Type>
+                     <Size>550</Size>
                   </CreatePartition>
+                  <!-- EFI system partition -->
                   <CreatePartition wcm:action="add">
-                        <Order>2</Order>
-                        <Type>Primary</Type>
-                        <Extend>true</Extend>
+                     <Order>2</Order>
+                     <Type>EFI</Type>
+                     <Size>100</Size>
+                  </CreatePartition>
+                  <!-- Microsoft reserved partition -->
+                  <CreatePartition wcm:action="add">
+                     <Order>3</Order>
+                     <Type>MSR</Type>
+                     <Size>128</Size>
+                  </CreatePartition>
+                  <!-- Windows partition -->
+                  <CreatePartition wcm:action="add">
+                     <Order>4</Order>
+                     <Type>Primary</Type>
+                     <Extend>true</Extend>
                   </CreatePartition>
                </CreatePartitions>
                <ModifyPartitions>
+                  <!-- Windows Recovery Environment partition -->
                   <ModifyPartition wcm:action="add">
-                        <Active>true</Active>
-                        <Format>NTFS</Format>
-                        <Label>boot</Label>
-                        <Order>1</Order>
-                        <PartitionID>1</PartitionID>
+                     <Order>1</Order>
+                     <PartitionID>1</PartitionID>
+                     <Label>WINRE</Label>
+                     <Format>NTFS</Format>
+                     <TypeID>DE94BBA4-06D1-4D40-A16A-BFD50179D6AC</TypeID>
                   </ModifyPartition>
+                  <!-- EFI system partition -->
                   <ModifyPartition wcm:action="add">
-                        <Format>NTFS</Format>
-                        <Label>Windows</Label>
-                        <Letter>C</Letter>
-                        <Order>2</Order>
-                        <PartitionID>2</PartitionID>
+                     <Order>2</Order>
+                     <PartitionID>2</PartitionID>
+                     <Label>System</Label>
+                     <Format>FAT32</Format>
+                  </ModifyPartition>
+                  <!-- Microsoft reserved partition -->
+                  <ModifyPartition wcm:action="add">
+                     <Order>3</Order>
+                     <PartitionID>3</PartitionID>
+                  </ModifyPartition>
+                  <!-- Windows partition -->
+                  <ModifyPartition wcm:action="add">
+                     <Order>4</Order>
+                     <PartitionID>4</PartitionID>
+                     <Label>Windows</Label>
+                     <Letter>C</Letter>
+                     <Format>NTFS</Format>
                   </ModifyPartition>
                </ModifyPartitions>
-               <DiskID>0</DiskID>
-               <WillWipeDisk>true</WillWipeDisk>
             </Disk>
          </DiskConfiguration>
          <ImageInstall>
@@ -90,7 +130,7 @@
                </InstallFrom>
                <InstallTo>
                   <DiskID>0</DiskID>
-                  <PartitionID>2</PartitionID>
+                  <PartitionID>4</PartitionID>
                </InstallTo>
             </OSImage>
          </ImageInstall>
@@ -98,9 +138,6 @@
             <AcceptEula>true</AcceptEula>
             <FullName>${build_username}</FullName>
             <Organization>${build_orgname}</Organization>
-            <ProductKey>
-               <WillShowUI>OnError</WillShowUI>
-            </ProductKey>
          </UserData>
          <EnableFirewall>false</EnableFirewall>
       </component>
@@ -123,17 +160,18 @@
          <TimeZone>${vm_guest_os_timezone}</TimeZone>
          <RegisteredOwner />
       </component>
-      <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-         <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
-      </component>
-      <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-OutOfBoxExperience" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-         <DoNotOpenInitialConfigurationTasksAtLogon>true</DoNotOpenInitialConfigurationTasksAtLogon>
-      </component>
       <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
          <SkipAutoActivation>true</SkipAutoActivation>
       </component>
    </settings>
    <settings pass="oobeSystem">
+      <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+         <InputLocale>${vm_guest_os_keyboard}</InputLocale>
+         <SystemLocale>${vm_guest_os_language}</SystemLocale>
+         <UILanguage>${vm_guest_os_language}</UILanguage>
+         <UILanguageFallback>${vm_guest_os_language}</UILanguageFallback>
+         <UserLocale>${vm_guest_os_language}</UserLocale>
+      </component>
       <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
          <AutoLogon>
             <Password>
@@ -141,15 +179,14 @@
                <PlainText>true</PlainText>
             </Password>
             <Enabled>true</Enabled>
+            <LogonCount>1</LogonCount>
             <Username>${build_username}</Username>
          </AutoLogon>
          <OOBE>
             <HideEULAPage>true</HideEULAPage>
-            <HideLocalAccountScreen>true</HideLocalAccountScreen>
             <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
             <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
             <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
-            <NetworkLocation>Work</NetworkLocation>
             <ProtectYourPC>2</ProtectYourPC>
          </OOBE>
          <UserAccounts>
@@ -172,21 +209,10 @@
          </UserAccounts>
          <FirstLogonCommands>
             <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force"</CommandLine>
-               <Description>Set Execution Policy 64-Bit</Description>
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; Set-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0; $media=(Get-PSDrive -PSProvider FileSystem).Root | Where-Object { Test-Path -LiteralPath (Join-Path $_ 'install-openssh.ps1') } | Select-Object -First 1; if (-not $media) { throw 'Cannot locate install-openssh.ps1 on mounted setup media.' }; $virtioScript=Join-Path $media 'install-virtio-guest-tools.ps1'; if (-not (Test-Path -LiteralPath $virtioScript)) { throw 'Cannot locate install-virtio-guest-tools.ps1 on mounted setup media.' }; $openSshScript=Join-Path $media 'install-openssh.ps1'; &amp; $virtioScript; &amp; $openSshScript"</CommandLine>
+               <Description>Configure the initial build session</Description>
                <Order>1</Order>
-               <RequiresUserInput>true</RequiresUserInput>
-            </SynchronousCommand>
-            <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force"</CommandLine>
-               <Description>Set Execution Policy 32-Bit</Description>
-               <Order>2</Order>
-               <RequiresUserInput>true</RequiresUserInput>
-            </SynchronousCommand>
-            <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -File E:\install-openssh.ps1</CommandLine>
-               <Order>3</Order>
-               <Description>Initial Configuration</Description>
+               <RequiresUserInput>false</RequiresUserInput>
             </SynchronousCommand>
          </FirstLogonCommands>
       </component>

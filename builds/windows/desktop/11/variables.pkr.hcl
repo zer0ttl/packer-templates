@@ -12,9 +12,33 @@ variable "vm_accelerator" {
   default     = "kvm"
 }
 
+variable "vm_machine_type" {
+  type        = string
+  description = "The QEMU machine type and options. Windows 11 Secure Boot requires q35 with SMM enabled."
+  default     = "q35,smm=on"
+}
+
+variable "vm_efi_firmware_code" {
+  type        = string
+  description = "Path to the read-only Secure Boot capable OVMF firmware code file."
+  default     = "/usr/share/OVMF/OVMF_CODE_4M.secboot.fd"
+}
+
+variable "vm_efi_firmware_vars" {
+  type        = string
+  description = "Path to the OVMF variables template containing Microsoft Secure Boot keys."
+  default     = "/usr/share/OVMF/OVMF_VARS_4M.ms.fd"
+}
+
 variable "vm_boot_wait" {
   type        = string
   description = "The time to wait before boot."
+}
+
+variable "vm_boot_command" {
+  type        = list(string)
+  description = "The virtual machine boot command."
+  default     = []
 }
 
 variable "vm_communicator" {
@@ -26,6 +50,12 @@ variable "vm_communicator" {
 variable "vm_cpu_count" {
   type        = number
   description = "The number of virtual CPUs."
+}
+
+variable "vm_cpu_model" {
+  type        = string
+  description = "The QEMU CPU model. Use host with KVM to expose the build host CPU features to Windows."
+  default     = "host"
 }
 
 variable "vm_vtpm" {
