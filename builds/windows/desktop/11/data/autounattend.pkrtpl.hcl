@@ -209,7 +209,7 @@
          </UserAccounts>
          <FirstLogonCommands>
             <SynchronousCommand wcm:action="add">
-               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; Set-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0; $script=(Get-PSDrive -PSProvider FileSystem).Root | ForEach-Object { Join-Path $_ 'install-openssh.ps1' } | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1; if (-not $script) { throw 'Cannot locate install-openssh.ps1 on mounted setup media.' }; &amp; $script"</CommandLine>
+               <CommandLine>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; Set-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0; $media=(Get-PSDrive -PSProvider FileSystem).Root | Where-Object { Test-Path -LiteralPath (Join-Path $_ 'install-openssh.ps1') } | Select-Object -First 1; if (-not $media) { throw 'Cannot locate install-openssh.ps1 on mounted setup media.' }; $virtioScript=Join-Path $media 'install-virtio-guest-tools.ps1'; if (-not (Test-Path -LiteralPath $virtioScript)) { throw 'Cannot locate install-virtio-guest-tools.ps1 on mounted setup media.' }; $openSshScript=Join-Path $media 'install-openssh.ps1'; &amp; $virtioScript; &amp; $openSshScript"</CommandLine>
                <Description>Configure the initial build session</Description>
                <Order>1</Order>
                <RequiresUserInput>false</RequiresUserInput>

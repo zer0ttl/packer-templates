@@ -47,13 +47,11 @@ locals {
                                 "${local.scripts_path}/sysprep.bat"
                               ]
   vm_provision_files_core    = [
-                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
                                 "${local.scripts_path}/configure-power.ps1",
                                 "${local.scripts_path}/apply-common-fixes.ps1",
                                 "${local.scripts_path}/stage-setup-complete.ps1"
                                 ]
   vm_provision_files_desktop = [
-                                "${local.scripts_path}/install-virtio-guest-tools.ps1",
                                 "${local.scripts_path}/install-spice-tools.ps1",
                                 "${local.scripts_path}/install-bginfo.ps1",
                                 "${local.scripts_path}/configure-power.ps1",
