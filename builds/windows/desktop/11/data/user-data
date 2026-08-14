@@ -1,0 +1,10 @@
+#cloud-config
+password: SetYourAdminPasswordHere
+chpasswd:
+  expire: false
+ssh_pwauth: true
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD...your-public-key-here
+
+hostname: windows11-desktop
+manage_etc_hosts: true
